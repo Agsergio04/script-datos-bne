@@ -1,0 +1,34 @@
+# requirements.txt - Dependencias de Python
+
+requests==2.31.0
+Flask==3.0.0
+Flask-CORS==4.0.0
+psycopg2-binary==2.9.9
+SQLAlchemy==2.0.23
+Flask-SQLAlchemy==3.1.1
+python-dotenv==1.0.0
+Werkzeug==3.0.1
+click==8.1.7
+colorama==0.4.6
+Jinja2==3.1.2
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+
+# Data processing
+pandas==2.1.3
+numpy==1.26.2
+
+# HTML Parsing
+beautifulsoup4==4.12.2
+lxml==4.9.3
+
+# API Documentation
+flasgger==0.9.7.1
+
+# Environment management
+python-decouple==3.8
+
+# Kaggle API
+kaggle==1.5.13

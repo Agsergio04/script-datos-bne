@@ -1,0 +1,11 @@
+2026-04-21 08:21:03,360 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 08:21:03,597 - ERROR - Error extrayendo datos de edición: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /edicion/bimo0000659916.html (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1020)')))
+2026-04-21 08:21:45,888 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 08:21:49,304 - INFO -   Título: N/A
+2026-04-21 08:21:49,305 - INFO -   Autor: N/A
+2026-04-21 08:21:49,305 - INFO -   Editorial: N/A
+2026-04-21 08:23:23,211 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 08:23:26,554 - INFO - Encontradas 27 tablas
+2026-04-21 08:23:26,561 - INFO -   Título: El ingenioso hidalgo Don Quijote de la Mancha 	;Miguel de Cervantes Saavedra 	;
+2026-04-21 08:23:26,562 - INFO -   Autor: N/A
+2026-04-21 08:23:26,562 - INFO -   Editorial: Ramón Sopena

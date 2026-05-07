@@ -1,0 +1,692 @@
+2026-04-21 07:13:28,925 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 07:13:28,926 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 07:13:47,695 - INFO - 172.19.0.1 - - [21/Apr/2026 07:13:47] "OPTIONS /api/importar/url HTTP/1.1" 200 -
+2026-04-21 07:13:47,704 - INFO - Importando obra desde URL: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:13:47,812 - INFO - No encontrada en BD, scrapeando datos.bne.es...
+2026-04-21 07:13:47,813 - INFO - Obteniendo obra desde URL: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:13:48,180 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:13:48,182 - INFO - 172.19.0.1 - - [21/Apr/2026 07:13:48] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -
+2026-04-21 07:13:56,950 - INFO - 172.19.0.1 - - [21/Apr/2026 07:13:56] "OPTIONS /api/importar/url HTTP/1.1" 200 -
+2026-04-21 07:13:56,959 - INFO - Importando obra desde URL: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:13:56,967 - INFO - No encontrada en BD, scrapeando datos.bne.es...
+2026-04-21 07:13:56,968 - INFO - Obteniendo obra desde URL: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:13:57,268 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:13:57,270 - INFO - 172.19.0.1 - - [21/Apr/2026 07:13:57] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -
+2026-04-21 07:14:01,543 - INFO - Importando obra desde URL: https://datos.bne.es/edicion/bimo0000659916
+2026-04-21 07:14:01,546 - INFO - No encontrada en BD, scrapeando datos.bne.es...
+2026-04-21 07:14:01,547 - INFO - Obteniendo obra desde URL: https://datos.bne.es/edicion/bimo0000659916
+2026-04-21 07:14:22,787 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/edicion/bimo0000659916
+2026-04-21 07:14:22,790 - INFO - 172.19.0.1 - - [21/Apr/2026 07:14:22] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -
+2026-04-21 07:25:24,962 - INFO - 172.19.0.1 - - [21/Apr/2026 07:25:24] "OPTIONS /api/importar/url HTTP/1.1" 200 -
+2026-04-21 07:25:24,977 - INFO - Importando obra desde URL: https://datos.bne.es/obra/XX3383563.html
+2026-04-21 07:25:25,045 - INFO - No encontrada en BD, scrapeando datos.bne.es...
+2026-04-21 07:25:25,047 - INFO - Obteniendo obra desde URL: https://datos.bne.es/obra/XX3383563.html
+2026-04-21 07:25:25,381 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/obra/XX3383563.html
+2026-04-21 07:25:25,386 - INFO - 172.19.0.1 - - [21/Apr/2026 07:25:25] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -
+2026-04-21 07:25:28,629 - INFO - Importando obra desde URL: https://datos.bne.es/obra/XX3383563.html
+2026-04-21 07:25:28,633 - INFO - No encontrada en BD, scrapeando datos.bne.es...
+2026-04-21 07:25:28,634 - INFO - Obteniendo obra desde URL: https://datos.bne.es/obra/XX3383563.html
+2026-04-21 07:25:28,929 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/obra/XX3383563.html
+2026-04-21 07:25:28,931 - INFO - 172.19.0.1 - - [21/Apr/2026 07:25:28] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -
+2026-04-21 07:25:34,036 - INFO - 172.19.0.1 - - [21/Apr/2026 07:25:34] "OPTIONS /api/importar/url HTTP/1.1" 200 -
+2026-04-21 07:25:34,043 - INFO - Importando obra desde URL: https://datos.bne.es/obra/XX3383563
+2026-04-21 07:25:34,046 - INFO - No encontrada en BD, scrapeando datos.bne.es...
+2026-04-21 07:25:34,046 - INFO - Obteniendo obra desde URL: https://datos.bne.es/obra/XX3383563
+2026-04-21 07:25:34,358 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/obra/XX3383563
+2026-04-21 07:25:34,360 - INFO - 172.19.0.1 - - [21/Apr/2026 07:25:34] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -
+2026-04-21 07:25:36,357 - INFO - Importando obra desde URL: https://datos.bne.es/obra/XX3383563
+2026-04-21 07:25:36,361 - INFO - No encontrada en BD, scrapeando datos.bne.es...
+2026-04-21 07:25:36,361 - INFO - Obteniendo obra desde URL: https://datos.bne.es/obra/XX3383563
+2026-04-21 07:25:36,685 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/obra/XX3383563
+2026-04-21 07:25:36,687 - INFO - 172.19.0.1 - - [21/Apr/2026 07:25:36] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -
+2026-04-21 07:27:25,339 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 07:27:25,340 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 07:28:13,920 - INFO - Importando obra desde URL: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:28:14,150 - INFO - Detectada URL de edición HTML
+2026-04-21 07:28:14,153 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:28:15,245 - INFO - Encontradas 27 tablas
+2026-04-21 07:28:15,249 - INFO - ✓ Datos extraídos: 10 campos
+2026-04-21 07:28:15,251 - INFO -   Título: El ingenioso hidalgo Don Quijote de la Mancha 	;Miguel de Cervantes Saavedra 	;
+2026-04-21 07:28:15,251 - INFO -   Autor: N/A
+2026-04-21 07:28:15,252 - INFO -   Editorial: Ramón Sopena
+2026-04-21 07:28:15,283 - INFO - ✓ Obra importada: 13
+2026-04-21 07:28:15,288 - INFO - 172.19.0.1 - - [21/Apr/2026 07:28:15] "[35m[1mPOST /api/importar/url HTTP/1.1[0m" 201 -
+2026-04-21 07:30:28,388 - INFO - 172.19.0.1 - - [21/Apr/2026 07:30:28] "OPTIONS /api/importar/url HTTP/1.1" 200 -
+2026-04-21 07:30:28,411 - INFO - Importando obra desde URL: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:30:28,433 - INFO - ✓ Obra encontrada en BD: 13
+2026-04-21 07:30:28,438 - INFO - 172.19.0.1 - - [21/Apr/2026 07:30:28] "POST /api/importar/url HTTP/1.1" 200 -
+2026-04-21 07:31:11,436 - INFO - 172.19.0.1 - - [21/Apr/2026 07:31:11] "OPTIONS /api/importar/url HTTP/1.1" 200 -
+2026-04-21 07:31:11,453 - INFO - Importando obra desde URL: https://datos.bne.es/edicion/bimo0000494676.html
+2026-04-21 07:31:11,460 - INFO - Detectada URL de edición HTML
+2026-04-21 07:31:11,462 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000494676.html
+2026-04-21 07:31:12,303 - INFO - Encontradas 5 tablas
+2026-04-21 07:31:12,305 - INFO - ✓ Datos extraídos: 7 campos
+2026-04-21 07:31:12,306 - INFO -   Título: "Abejas de Plata" de 1974, 1975, 1976 	;Agrupación Fotográfica de E. y D. Guadalajara 	;
+2026-04-21 07:31:12,307 - INFO -   Autor: N/A
+2026-04-21 07:31:12,308 - INFO -   Editorial: La Agrupación
+2026-04-21 07:31:12,327 - INFO - ✓ Obra importada: 14
+2026-04-21 07:31:12,330 - INFO - 172.19.0.1 - - [21/Apr/2026 07:31:12] "[35m[1mPOST /api/importar/url HTTP/1.1[0m" 201 -
+2026-04-21 07:32:44,142 - INFO - 172.19.0.1 - - [21/Apr/2026 07:32:44] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-21 07:32:44,165 - INFO - Buscando obra por título: "Amigos de la Zarzuela" : ;21, 22 de junio de 1975, Teatro Valladolid : [programación]
+2026-04-21 07:32:44,223 - INFO - No encontrada en BD, buscando en datos.bne.es...
+2026-04-21 07:32:44,224 - INFO - Buscando obra por título: "Amigos de la Zarzuela" : ;21, 22 de junio de 1975, Teatro Valladolid : [programación]
+2026-04-21 07:32:44,981 - WARNING - No se encontró obra con título: "Amigos de la Zarzuela" : ;21, 22 de junio de 1975, Teatro Valladolid : [programación]
+2026-04-21 07:32:44,985 - INFO - 172.19.0.1 - - [21/Apr/2026 07:32:44] "[33mPOST /api/importar/titulo HTTP/1.1[0m" 404 -
+2026-04-21 07:33:26,478 - INFO - 172.19.0.1 - - [21/Apr/2026 07:33:26] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 07:33:26,501 - INFO - Obteniendo obra desde URL: https://datos.bne.es/edicion/a6065627.html
+2026-04-21 07:33:32,695 - INFO - ✓ Datos obtenidos en formato RDF
+2026-04-21 07:33:32,696 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/edicion/a6065627.html
+2026-04-21 07:33:32,701 - INFO - Obteniendo obra desde URL: https://datos.bne.es/edicion/a5986979.html
+2026-04-21 07:33:35,847 - INFO - ✓ Datos obtenidos en formato RDF
+2026-04-21 07:33:35,848 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/edicion/a5986979.html
+2026-04-21 07:33:35,853 - INFO - 172.19.0.1 - - [21/Apr/2026 07:33:35] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 07:42:35,896 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.3:5000
+2026-04-21 07:42:35,897 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 07:48:55,225 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 07:48:55,231 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:48:56,363 - INFO - Encontradas 27 tablas
+2026-04-21 07:48:56,367 - INFO - ✓ Datos extraídos: 10 campos
+2026-04-21 07:48:56,368 - INFO -   Título: El ingenioso hidalgo Don Quijote de la Mancha 	;Miguel de Cervantes Saavedra 	;
+2026-04-21 07:48:56,369 - INFO -   Autor: N/A
+2026-04-21 07:48:56,370 - INFO -   Editorial: Ramón Sopena
+2026-04-21 07:48:56,417 - INFO - [LOTE 1] ✓ Importada: El ingenioso hidalgo Don Quijote de la Mancha
+2026-04-21 07:48:56,423 - INFO - [LOTE 2] Detectada URL de edición HTML
+2026-04-21 07:48:56,424 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/a6065627.html
+2026-04-21 07:48:57,171 - INFO - Encontradas 2 tablas
+2026-04-21 07:48:57,176 - INFO - ✓ Datos extraídos: 8 campos
+2026-04-21 07:48:57,179 - INFO -   Título: "Amigos de la Zarzuela" : 	;21, 22 de junio de 1975, Teatro Valladolid : [programación] 	;
+2026-04-21 07:48:57,180 - INFO -   Autor: N/A
+2026-04-21 07:48:57,181 - INFO -   Editorial: [s.n.]
+2026-04-21 07:48:57,201 - INFO - [LOTE 2] ✓ Importada: "Amigos de la Zarzuela" :
+2026-04-21 07:48:57,203 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓2, 📚0, ✗0)
+2026-04-21 07:48:57,217 - INFO - 172.19.0.1 - - [21/Apr/2026 07:48:57] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 07:51:52,292 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.3:5000
+2026-04-21 07:51:52,293 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 07:59:04,128 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 07:59:04,129 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 07:59:05,083 - INFO - Encontradas 27 tablas
+2026-04-21 07:59:05,085 - INFO - ✓ Datos extraídos: 10 campos
+2026-04-21 07:59:05,086 - INFO -   Título: El ingenioso hidalgo Don Quijote de la Mancha 	;Miguel de Cervantes Saavedra 	;
+2026-04-21 07:59:05,086 - INFO -   Autor: N/A
+2026-04-21 07:59:05,087 - INFO -   Editorial: Ramón Sopena
+2026-04-21 07:59:05,091 - ERROR - [LOTE 1] Error: name 'nueva_obra' is not defined
+2026-04-21 07:59:05,093 - INFO - [LOTE 2] Detectada URL de edición HTML
+2026-04-21 07:59:05,094 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/a6065627.html
+2026-04-21 07:59:05,818 - INFO - Encontradas 2 tablas
+2026-04-21 07:59:05,821 - INFO - ✓ Datos extraídos: 8 campos
+2026-04-21 07:59:05,822 - INFO -   Título: "Amigos de la Zarzuela" : 	;21, 22 de junio de 1975, Teatro Valladolid : [programación] 	;
+2026-04-21 07:59:05,823 - INFO -   Autor: N/A
+2026-04-21 07:59:05,824 - INFO -   Editorial: [s.n.]
+2026-04-21 07:59:05,827 - ERROR - [LOTE 2] Error: name 'nueva_obra' is not defined
+2026-04-21 07:59:05,827 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓0, 📚0, ✗2)
+2026-04-21 07:59:05,830 - INFO - 172.19.0.1 - - [21/Apr/2026 07:59:05] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:01:51,712 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 08:01:51,714 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 08:01:52,719 - INFO - Encontradas 27 tablas
+2026-04-21 08:01:52,721 - INFO - ✓ Datos extraídos: 10 campos
+2026-04-21 08:01:52,722 - INFO -   Título: El ingenioso hidalgo Don Quijote de la Mancha 	;Miguel de Cervantes Saavedra 	;
+2026-04-21 08:01:52,722 - INFO -   Autor: N/A
+2026-04-21 08:01:52,723 - INFO -   Editorial: Ramón Sopena
+2026-04-21 08:01:52,726 - ERROR - [LOTE 1] Error: name 'nueva_obra' is not defined
+2026-04-21 08:01:52,728 - INFO - [LOTE 2] Detectada URL de edición HTML
+2026-04-21 08:01:52,728 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/a6065627.html
+2026-04-21 08:01:53,462 - INFO - Encontradas 2 tablas
+2026-04-21 08:01:53,463 - INFO - ✓ Datos extraídos: 8 campos
+2026-04-21 08:01:53,464 - INFO -   Título: "Amigos de la Zarzuela" : 	;21, 22 de junio de 1975, Teatro Valladolid : [programación] 	;
+2026-04-21 08:01:53,464 - INFO -   Autor: N/A
+2026-04-21 08:01:53,465 - INFO -   Editorial: [s.n.]
+2026-04-21 08:01:53,468 - ERROR - [LOTE 2] Error: name 'nueva_obra' is not defined
+2026-04-21 08:01:53,470 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓0, 📚0, ✗2)
+2026-04-21 08:01:53,472 - INFO - 172.19.0.1 - - [21/Apr/2026 08:01:53] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:02:21,376 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.3:5000
+2026-04-21 08:02:21,376 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 08:02:38,794 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 08:02:38,795 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000659916.html
+2026-04-21 08:02:39,656 - INFO - Encontradas 27 tablas
+2026-04-21 08:02:39,658 - INFO - ✓ Datos extraídos: 10 campos
+2026-04-21 08:02:39,659 - INFO -   Título: El ingenioso hidalgo Don Quijote de la Mancha 	;Miguel de Cervantes Saavedra 	;
+2026-04-21 08:02:39,659 - INFO -   Autor: N/A
+2026-04-21 08:02:39,660 - INFO -   Editorial: Ramón Sopena
+2026-04-21 08:02:39,687 - INFO - [LOTE 1] ✓ Importada: El ingenioso hidalgo Don Quijote de la Mancha
+2026-04-21 08:02:39,689 - INFO - [LOTE 2] Detectada URL de edición HTML
+2026-04-21 08:02:39,689 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/a6065627.html
+2026-04-21 08:02:40,478 - INFO - Encontradas 2 tablas
+2026-04-21 08:02:40,480 - INFO - ✓ Datos extraídos: 8 campos
+2026-04-21 08:02:40,480 - INFO -   Título: "Amigos de la Zarzuela" : 	;21, 22 de junio de 1975, Teatro Valladolid : [programación] 	;
+2026-04-21 08:02:40,481 - INFO -   Autor: N/A
+2026-04-21 08:02:40,482 - INFO -   Editorial: [s.n.]
+2026-04-21 08:02:40,492 - INFO - [LOTE 2] ✓ Importada: "Amigos de la Zarzuela:
+2026-04-21 08:02:40,493 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓2, 📚0, ✗0)
+2026-04-21 08:02:40,495 - INFO - 172.19.0.1 - - [21/Apr/2026 08:02:40] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:03:25,396 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.3:5000
+2026-04-21 08:03:25,397 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 08:03:26,341 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓0, 📚2, ✗0)
+2026-04-21 08:03:26,343 - INFO - 172.19.0.1 - - [21/Apr/2026 08:03:26] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:04:46,751 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 08:04:46,752 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000006843.html
+2026-04-21 08:04:49,977 - INFO - Encontradas 7 tablas
+2026-04-21 08:04:49,980 - INFO - ✓ Datos extraídos: 7 campos
+2026-04-21 08:04:49,981 - INFO -   Título: La alacena 	;antología 	;Pilar Paz Pasamar ; selección y prólogo José Ramón Ripoll ; [dibujos, Arturo Redondo Paz] 	;
+2026-04-21 08:04:49,982 - INFO -   Autor: N/A
+2026-04-21 08:04:49,983 - INFO -   Editorial: Diputación Provincial
+2026-04-21 08:04:50,008 - INFO - [LOTE 1] ✓ Importada: La alacena
+2026-04-21 08:04:50,009 - INFO - 📊 LOTE COMPLETADO: 1 obras (✓1, 📚0, ✗0)
+2026-04-21 08:04:50,012 - INFO - 172.19.0.1 - - [21/Apr/2026 08:04:50] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:09:49,942 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 08:09:49,943 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 08:10:02,580 - INFO - Buscando x nombre: Quijote
+2026-04-21 08:10:02,664 - INFO - Buscando también en datos.bne.es
+2026-04-21 08:10:02,665 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 08:10:02,668 - INFO - 172.19.0.1 - - [21/Apr/2026 08:10:02] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 08:10:13,918 - INFO - Buscando x nombre: ABC
+2026-04-21 08:10:13,922 - INFO - Buscando también en datos.bne.es
+2026-04-21 08:10:13,923 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 08:10:13,925 - INFO - 172.19.0.1 - - [21/Apr/2026 08:10:13] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 08:10:37,984 - INFO - 172.19.0.1 - - [21/Apr/2026 08:10:37] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 08:10:37,994 - INFO - Buscando x nombre: El principito
+2026-04-21 08:10:37,998 - INFO - Buscando también en datos.bne.es
+2026-04-21 08:10:37,998 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 08:10:38,000 - INFO - 172.19.0.1 - - [21/Apr/2026 08:10:38] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 08:10:59,550 - INFO - 172.19.0.1 - - [21/Apr/2026 08:10:59] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:10:59,562 - INFO - [LOTE 2] Buscando por título: El principito
+2026-04-21 08:10:59,562 - INFO - Buscando obra por título: El principito
+2026-04-21 08:10:59,833 - ERROR - Error buscando obra por título: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+principito&type=work (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-21 08:10:59,834 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓0, 📚1, ✗1)
+2026-04-21 08:10:59,836 - INFO - 172.19.0.1 - - [21/Apr/2026 08:10:59] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:40:02,086 - INFO - 172.19.0.1 - - [21/Apr/2026 08:40:02] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:40:02,326 - INFO - 📊 LOTE COMPLETADO: 1 obras (✓0, 📚1, ✗0)
+2026-04-21 08:40:02,334 - INFO - 172.19.0.1 - - [21/Apr/2026 08:40:02] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:40:08,094 - INFO - 172.19.0.1 - - [21/Apr/2026 08:40:08] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 08:40:08,103 - INFO - Buscando x nombre: La regenta
+2026-04-21 08:40:08,108 - INFO - Buscando también en datos.bne.es
+2026-04-21 08:40:08,109 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 08:40:08,111 - INFO - 172.19.0.1 - - [21/Apr/2026 08:40:08] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 08:42:06,495 - INFO - 172.19.0.1 - - [21/Apr/2026 08:42:06] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:42:06,555 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 08:42:06,556 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/a5986979.html
+2026-04-21 08:42:08,326 - INFO - Encontradas 2 tablas
+2026-04-21 08:42:08,329 - INFO - ✓ Datos extraídos: 8 campos
+2026-04-21 08:42:08,330 - INFO -   Título: "Antecedentes de las artes populares en España" : 	;conferencia ilustrada con diapositivas : 3 julio 1975, Salón de Actos de la Diputación Provincial 	;
+2026-04-21 08:42:08,330 - INFO -   Autor: N/A
+2026-04-21 08:42:08,331 - INFO -   Editorial: [s.n.]
+2026-04-21 08:42:08,408 - INFO - [LOTE 1] ✓ Importada: Antecedentes de las artes populares en España"
+2026-04-21 08:42:08,411 - INFO - [LOTE 2] Detectada URL de edición HTML
+2026-04-21 08:42:08,411 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0000483000.html
+2026-04-21 08:42:09,228 - INFO - Encontradas 5 tablas
+2026-04-21 08:42:09,230 - INFO - ✓ Datos extraídos: 6 campos
+2026-04-21 08:42:09,230 - INFO -   Título: "Mates" amb calculadora 	;Miquel Lasala i Rius 	;
+2026-04-21 08:42:09,231 - INFO -   Autor: N/A
+2026-04-21 08:42:09,231 - INFO -   Editorial: M. Lasala
+2026-04-21 08:42:09,240 - INFO - [LOTE 2] ✓ Importada: Mates" amb calculadora
+2026-04-21 08:42:09,241 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓2, 📚0, ✗0)
+2026-04-21 08:42:09,243 - INFO - 172.19.0.1 - - [21/Apr/2026 08:42:09] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:42:12,212 - INFO - 172.19.0.1 - - [21/Apr/2026 08:42:12] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:42:12,226 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓0, 📚2, ✗0)
+2026-04-21 08:42:12,228 - INFO - 172.19.0.1 - - [21/Apr/2026 08:42:12] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:42:16,572 - INFO - [LOTE 1] Detectada URL de datos RDF
+2026-04-21 08:42:16,572 - INFO - Obteniendo obra desde URL: https://datos.bne.es/edicion/a5986979.html,
+2026-04-21 08:42:17,396 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/edicion/a5986979.html,
+2026-04-21 08:42:17,398 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓0, 📚1, ✗1)
+2026-04-21 08:42:17,400 - INFO - 172.19.0.1 - - [21/Apr/2026 08:42:17] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:42:25,647 - INFO - 172.19.0.1 - - [21/Apr/2026 08:42:25] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:42:25,657 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 08:42:25,658 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/a5986979.htmlhttps://datos.bne.es/edicion/bimo0000483000.html
+2026-04-21 08:42:26,114 - ERROR - Error extrayendo datos de edición: 404 Client Error: Not Found for url: https://datos.bne.es/edicion/a5986979.htmlhttps://datos.bne.es/edicion/bimo0000483000.html
+2026-04-21 08:42:26,140 - INFO - 📊 LOTE COMPLETADO: 1 obras (✓0, 📚0, ✗1)
+2026-04-21 08:42:26,142 - INFO - 172.19.0.1 - - [21/Apr/2026 08:42:26] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:42:31,253 - INFO - 172.19.0.1 - - [21/Apr/2026 08:42:31] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 08:42:31,263 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 08:42:31,263 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/a5986979.html https://datos.bne.es/edicion/bimo0000483000.html
+2026-04-21 08:42:32,141 - ERROR - Error extrayendo datos de edición: 404 Client Error: Not Found for url: https://datos.bne.es/edicion/a5986979.html%20https://datos.bne.es/edicion/bimo0000483000.html
+2026-04-21 08:42:32,144 - INFO - 📊 LOTE COMPLETADO: 1 obras (✓0, 📚0, ✗1)
+2026-04-21 08:42:32,146 - INFO - 172.19.0.1 - - [21/Apr/2026 08:42:32] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 09:12:21,515 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 09:12:21,516 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 09:12:41,754 - INFO - Buscando x nombre: Quijote
+2026-04-21 09:12:41,868 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:12:41,868 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:12:41,869 - ERROR - Error en /api/importar/nombre: 'Obra' object has no attribute 'descripcion'
+2026-04-21 09:12:41,871 - INFO - 172.19.0.1 - - [21/Apr/2026 09:12:41] "[35m[1mPOST /api/importar/nombre HTTP/1.1[0m" 500 -
+2026-04-21 09:14:20,605 - INFO - Buscando x nombre: Quijote
+2026-04-21 09:14:20,610 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:14:20,610 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:14:20,611 - ERROR - Error en /api/importar/nombre: 'Obra' object has no attribute 'descripcion'
+2026-04-21 09:14:20,613 - INFO - 172.19.0.1 - - [21/Apr/2026 09:14:20] "[35m[1mPOST /api/importar/nombre HTTP/1.1[0m" 500 -
+2026-04-21 09:14:48,860 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 09:14:48,861 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 09:15:01,910 - INFO - Buscando x nombre: Quijote
+2026-04-21 09:15:02,006 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:15:02,007 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:15:02,009 - INFO - 172.19.0.1 - - [21/Apr/2026 09:15:02] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:16:43,686 - INFO - 172.19.0.1 - - [21/Apr/2026 09:16:43] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:16:43,693 - INFO - Buscando x nombre: El principito
+2026-04-21 09:16:43,699 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:16:43,699 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:16:43,701 - INFO - 172.19.0.1 - - [21/Apr/2026 09:16:43] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:16:50,706 - INFO - 172.19.0.1 - - [21/Apr/2026 09:16:50] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:16:50,714 - INFO - Buscando x nombre: El quijote
+2026-04-21 09:16:50,717 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:16:50,717 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:16:50,719 - INFO - 172.19.0.1 - - [21/Apr/2026 09:16:50] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:18:44,057 - INFO - 172.19.0.1 - - [21/Apr/2026 09:18:44] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 09:18:44,079 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 09:18:44,080 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/bimo0001388234.html
+2026-04-21 09:18:47,491 - INFO - Encontradas 3 tablas
+2026-04-21 09:18:47,492 - INFO - ✓ Datos extraídos: 6 campos
+2026-04-21 09:18:47,493 - INFO -   Título: !Alerta lo pueblos de España¡ 	;estudio político-militar del periodo final de la guerra española 	;por el General Rojo 	;
+2026-04-21 09:18:47,494 - INFO -   Autor: N/A
+2026-04-21 09:18:47,494 - INFO -   Editorial: Aniceto López
+2026-04-21 09:18:47,521 - INFO - [LOTE 1] ✓ Importada: !Alerta lo pueblos de España¡
+2026-04-21 09:18:47,521 - INFO - 📊 LOTE COMPLETADO: 1 obras (✓1, 📚0, ✗0)
+2026-04-21 09:18:47,523 - INFO - 172.19.0.1 - - [21/Apr/2026 09:18:47] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 09:18:55,518 - INFO - 172.19.0.1 - - [21/Apr/2026 09:18:55] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-21 09:18:55,525 - INFO - Buscando obra por título: El pincipito
+2026-04-21 09:18:55,528 - INFO - No encontrada en BD, buscando en datos.bne.es...
+2026-04-21 09:18:55,529 - INFO - Buscando obra por título: El pincipito
+2026-04-21 09:18:57,207 - WARNING - No se encontró obra con título: El pincipito
+2026-04-21 09:18:57,209 - INFO - 172.19.0.1 - - [21/Apr/2026 09:18:57] "[33mPOST /api/importar/titulo HTTP/1.1[0m" 404 -
+2026-04-21 09:19:03,684 - INFO - 172.19.0.1 - - [21/Apr/2026 09:19:03] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 09:19:03,693 - INFO - 📊 LOTE COMPLETADO: 1 obras (✓0, 📚1, ✗0)
+2026-04-21 09:19:03,695 - INFO - 172.19.0.1 - - [21/Apr/2026 09:19:03] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 09:19:16,347 - INFO - 172.19.0.1 - - [21/Apr/2026 09:19:16] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:19:16,354 - INFO - Buscando x nombre: Lo pueblo
+2026-04-21 09:19:16,359 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:19:16,359 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:19:16,361 - INFO - 172.19.0.1 - - [21/Apr/2026 09:19:16] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:20:17,203 - INFO - 172.19.0.1 - - [21/Apr/2026 09:20:17] "OPTIONS /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 09:20:17,214 - INFO - [LOTE 1] Detectada URL de edición HTML
+2026-04-21 09:20:17,215 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/a7378399.html
+2026-04-21 09:20:18,053 - INFO - Encontradas 2 tablas
+2026-04-21 09:20:18,054 - INFO - ✓ Datos extraídos: 8 campos
+2026-04-21 09:20:18,055 - INFO -   Título: 80 El Principito : 	;80 años de su publicación : del 23 de junio al 30 de septiembre 	;
+2026-04-21 09:20:18,055 - INFO -   Autor: N/A
+2026-04-21 09:20:18,055 - INFO -   Editorial: Ajuntament des Castell [etc.]
+2026-04-21 09:20:18,067 - INFO - [LOTE 1] ✓ Importada: 80 El Principito
+2026-04-21 09:20:18,069 - INFO - [LOTE 2] Detectada URL de edición HTML
+2026-04-21 09:20:18,070 - INFO - Extrayendo datos de: https://datos.bne.es/edicion/a7416942.html
+2026-04-21 09:20:18,741 - INFO - Encontradas 3 tablas
+2026-04-21 09:20:18,743 - INFO - ✓ Datos extraídos: 10 campos
+2026-04-21 09:20:18,743 - INFO -   Título: Un libro para ir a dormir
+2026-04-21 09:20:18,743 - INFO -   Autor: N/A
+2026-04-21 09:20:18,744 - INFO -   Editorial: [fabricante no identificado],Panini Books,
+2026-04-21 09:20:18,753 - INFO - [LOTE 2] ✓ Importada: Un libro para ir a dormir
+2026-04-21 09:20:18,753 - INFO - 📊 LOTE COMPLETADO: 2 obras (✓2, 📚0, ✗0)
+2026-04-21 09:20:18,755 - INFO - 172.19.0.1 - - [21/Apr/2026 09:20:18] "POST /api/importar/lote HTTP/1.1" 200 -
+2026-04-21 09:20:25,547 - INFO - 172.19.0.1 - - [21/Apr/2026 09:20:25] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:20:25,555 - INFO - Buscando x nombre: El principito
+2026-04-21 09:20:25,558 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:20:25,559 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:20:25,560 - INFO - 172.19.0.1 - - [21/Apr/2026 09:20:25] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:20:31,430 - INFO - 172.19.0.1 - - [21/Apr/2026 09:20:31] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:20:31,437 - INFO - Buscando x nombre: El
+2026-04-21 09:20:31,440 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:20:31,441 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:20:31,442 - INFO - 172.19.0.1 - - [21/Apr/2026 09:20:31] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:20:54,738 - INFO - 172.19.0.1 - - [21/Apr/2026 09:20:54] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-21 09:20:54,746 - INFO - Buscando obra por título: El pincipito
+2026-04-21 09:20:54,750 - INFO - No encontrada en BD, buscando en datos.bne.es...
+2026-04-21 09:20:54,751 - INFO - Buscando obra por título: El pincipito
+2026-04-21 09:20:55,710 - WARNING - No se encontró obra con título: El pincipito
+2026-04-21 09:20:55,712 - INFO - 172.19.0.1 - - [21/Apr/2026 09:20:55] "[33mPOST /api/importar/titulo HTTP/1.1[0m" 404 -
+2026-04-21 09:22:05,169 - INFO - Buscando obra por título: El Quijote
+2026-04-21 09:22:05,173 - INFO - ✓ Obra encontrada en BD: 1
+2026-04-21 09:22:05,175 - INFO - 172.19.0.1 - - [21/Apr/2026 09:22:05] "POST /api/importar/titulo HTTP/1.1" 200 -
+2026-04-21 09:23:20,156 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 09:23:20,156 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 09:23:43,482 - INFO - 172.19.0.1 - - [21/Apr/2026 09:23:43] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:23:43,491 - INFO - Buscando x nombre: El arbol de las ciencias
+2026-04-21 09:23:43,606 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:23:43,607 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:23:43,609 - INFO - 172.19.0.1 - - [21/Apr/2026 09:23:43] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:23:49,462 - INFO - 172.19.0.1 - - [21/Apr/2026 09:23:49] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-21 09:23:49,471 - INFO - Buscando obra por título: El arbol de las ciencias
+2026-04-21 09:23:49,474 - INFO - No encontrada en BD, buscando en datos.bne.es...
+2026-04-21 09:23:49,474 - INFO - Buscando obra por título: El arbol de las ciencias
+2026-04-21 09:23:49,649 - ERROR - Error buscando obra por título: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+arbol+de+las+ciencias&type=work (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-21 09:23:49,651 - INFO - 172.19.0.1 - - [21/Apr/2026 09:23:49] "[33mPOST /api/importar/titulo HTTP/1.1[0m" 404 -
+2026-04-21 09:24:00,354 - INFO - 172.19.0.1 - - [21/Apr/2026 09:24:00] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-21 09:24:00,362 - INFO - Buscando obra por título: El arbol de las ciencias
+2026-04-21 09:24:00,371 - INFO - No encontrada en BD, buscando en datos.bne.es...
+2026-04-21 09:24:00,372 - INFO - Buscando obra por título: El arbol de las ciencias
+2026-04-21 09:24:00,515 - ERROR - Error buscando obra por título: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+arbol+de+las+ciencias&type=work (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-21 09:24:00,517 - INFO - 172.19.0.1 - - [21/Apr/2026 09:24:00] "[33mPOST /api/importar/titulo HTTP/1.1[0m" 404 -
+2026-04-21 09:24:04,473 - INFO - 172.19.0.1 - - [21/Apr/2026 09:24:04] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:24:04,486 - INFO - Buscando x nombre: El arbol de las ciencias
+2026-04-21 09:24:04,489 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:24:04,490 - WARNING - No se pudo buscar en datos.bne.es: 'BNEScraper' object has no attribute 'buscar_obras_por_nombre'
+2026-04-21 09:24:04,492 - INFO - 172.19.0.1 - - [21/Apr/2026 09:24:04] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:26:20,001 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 09:26:20,002 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 09:26:42,118 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 09:26:42,119 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 09:26:53,524 - ERROR - Error en /api/importar/nombre: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+2026-04-21 09:26:53,526 - INFO - 172.19.0.1 - - [21/Apr/2026 09:26:53] "[35m[1mPOST /api/importar/nombre HTTP/1.1[0m" 500 -
+2026-04-21 09:27:25,274 - INFO - Buscando x nombre: Cervantes
+2026-04-21 09:27:25,334 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:27:25,335 - INFO - Buscando autores: Cervantes
+2026-04-21 09:27:25,498 - ERROR - Error buscando autores: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=Cervantes&type=person (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-21 09:27:25,499 - INFO - Buscando periódicos: Cervantes
+2026-04-21 09:27:25,665 - ERROR - Error buscando periódicos: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=Cervantes&type=publication (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-21 09:27:25,665 - INFO - Búsqueda por nombre 'Cervantes': 0 resultados en datos.bne.es
+2026-04-21 09:27:25,667 - INFO - 172.19.0.1 - - [21/Apr/2026 09:27:25] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:28:45,357 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 09:28:45,358 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 09:28:45,830 - INFO - Buscando x nombre: Cervantes
+2026-04-21 09:28:45,881 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:28:45,882 - INFO - 🔎 Iniciando búsqueda por nombre en datos.bne.es: 'Cervantes'
+2026-04-21 09:28:45,883 - INFO -   - Buscando autores...
+2026-04-21 09:28:45,883 - INFO - Buscando autores: Cervantes
+2026-04-21 09:28:46,079 - ERROR - Error buscando autores: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=Cervantes&type=person (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-21 09:28:46,079 - INFO -     ✗ No se encontraron autores
+2026-04-21 09:28:46,080 - INFO -   - Buscando periódicos...
+2026-04-21 09:28:46,080 - INFO - Buscando periódicos: Cervantes
+2026-04-21 09:28:46,240 - ERROR - Error buscando periódicos: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=Cervantes&type=publication (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-21 09:28:46,241 - INFO -     ✗ No se encontraron periódicos
+2026-04-21 09:28:46,241 - INFO - 📊 Búsqueda por nombre 'Cervantes': 0 RESULTADOS TOTALES en datos.bne.es
+2026-04-21 09:28:46,243 - INFO - 172.19.0.1 - - [21/Apr/2026 09:28:46] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:29:41,156 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 09:29:41,157 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 09:29:42,545 - INFO - Buscando x nombre: Cervantes
+2026-04-21 09:29:42,596 - INFO - Buscando también en datos.bne.es
+2026-04-21 09:29:42,597 - INFO - 🔎 Iniciando búsqueda por nombre en datos.bne.es: 'Cervantes'
+2026-04-21 09:29:42,597 - INFO -   - Buscando autores...
+2026-04-21 09:29:42,598 - INFO - Buscando autores: Cervantes
+2026-04-21 09:29:42,844 - ERROR - Error buscando autores: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-04-21 09:29:42,845 - INFO -     ✗ No se encontraron autores
+2026-04-21 09:29:42,845 - INFO -   - Buscando periódicos...
+2026-04-21 09:29:42,846 - INFO - Buscando periódicos: Cervantes
+2026-04-21 09:29:43,829 - INFO - Se encontraron 0 periódicos
+2026-04-21 09:29:43,830 - INFO -     ✗ No se encontraron periódicos
+2026-04-21 09:29:43,831 - INFO - 📊 Búsqueda por nombre 'Cervantes': 0 RESULTADOS TOTALES en datos.bne.es
+2026-04-21 09:29:43,833 - INFO - 172.19.0.1 - - [21/Apr/2026 09:29:43] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:30:19,613 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 09:30:19,613 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 09:30:20,943 - INFO - Buscando x nombre: Quijote
+2026-04-21 09:30:21,006 - INFO - ℹ️ Nota: Búsqueda en datos.bne.es limitada. Se recomienda usar URL o lote directamente.
+2026-04-21 09:30:21,008 - INFO - 172.19.0.1 - - [21/Apr/2026 09:30:21] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:31:19,967 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 09:31:19,967 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 09:32:13,043 - INFO - 172.19.0.1 - - [21/Apr/2026 09:32:13] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-21 09:32:13,051 - INFO - Buscando obra por título: El principito
+2026-04-21 09:32:13,112 - INFO - No encontrada en BD, buscando en datos.bne.es...
+2026-04-21 09:32:13,113 - INFO - Buscando obra por título: El principito
+2026-04-21 09:32:13,267 - ERROR - Error buscando obra por título: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+principito&type=work (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-21 09:32:13,270 - INFO - 172.19.0.1 - - [21/Apr/2026 09:32:13] "[33mPOST /api/importar/titulo HTTP/1.1[0m" 404 -
+2026-04-21 09:32:20,882 - INFO - 172.19.0.1 - - [21/Apr/2026 09:32:20] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:32:20,890 - INFO - Buscando x nombre: El principito
+2026-04-21 09:32:20,894 - INFO - ℹ️ Nota: Búsqueda en datos.bne.es limitada. Se recomienda usar URL o lote directamente.
+2026-04-21 09:32:20,896 - INFO - 172.19.0.1 - - [21/Apr/2026 09:32:20] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 09:32:25,260 - INFO - Buscando x nombre: El
+2026-04-21 09:32:25,264 - INFO - ℹ️ Nota: Búsqueda en datos.bne.es limitada. Se recomienda usar URL o lote directamente.
+2026-04-21 09:32:25,265 - INFO - 172.19.0.1 - - [21/Apr/2026 09:32:25] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 11:59:20,995 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 11:59:20,996 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 12:10:58,598 - INFO - 📋 [NOMBRE] Buscando obras por título: 'Quijote'
+2026-04-21 12:10:58,599 - INFO -   1️⃣ Buscando en BD local...
+2026-04-21 12:10:58,794 - INFO -      ✓ Encontradas 1 obras en BD local
+2026-04-21 12:10:58,795 - INFO -   2️⃣ Buscando en datos.bne.es...
+2026-04-21 12:10:58,795 - INFO - 🔍 Buscando obras por TÍTULO en datos.bne.es: 'Quijote'
+2026-04-21 12:10:58,796 - INFO -   📡 Request GET: https://datos.bne.es/busca/?p=Quijote
+2026-04-21 12:10:59,491 - ERROR - ❌ Error de conexión buscando obras por título: 404 Client Error: Not Found for url: https://datos.bne.es/busca/?p=Quijote&type=obra
+2026-04-21 12:10:59,492 - INFO -      ✓ Encontradas 0 obras en datos.bne.es
+2026-04-21 12:10:59,495 - INFO - 172.19.0.1 - - [21/Apr/2026 12:10:59] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-21 12:14:03,777 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-21 12:14:03,778 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-21 12:14:10,568 - INFO - 📋 [NOMBRE] Buscando obras por título: 'Cervantes'
+2026-04-21 12:14:10,569 - INFO -   1️⃣ Buscando en BD local...
+2026-04-21 12:14:10,722 - INFO -      ✓ Encontradas 0 obras en BD local
+2026-04-21 12:14:10,723 - INFO -   2️⃣ Buscando en datos.bne.es...
+2026-04-21 12:14:10,725 - INFO - 🔍 Buscando obras por TÍTULO en datos.bne.es: 'Cervantes'
+2026-04-21 12:14:10,728 - INFO -   📡 Intentando: https://datos.bne.es/search?q=Cervantes
+2026-04-21 12:14:26,680 - WARNING -     ⚠️ Error: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-04-21 12:23:00,448 - INFO -   📡 Intentando: https://datos.bne.es/query?q=Cervantes
+2026-04-21 12:23:00,530 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /query?q=Cervantes (Caused by NameResolutionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to resolve 'datos.bne.es' ([Errno -2] Name or service not known)"))
+2026-04-21 12:23:00,554 - INFO -   📡 Intentando: https://datos.bne.es/resultados?q=Cervantes
+2026-04-21 12:23:00,756 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /resultados?q=Cervantes (Caused by NameResolutionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to resolve 'datos.bne.es' ([Errno -2] Name or service not known)"))
+2026-04-21 12:23:00,773 - INFO -   📡 Intentando: https://datos.bne.es/?q=Cervantes
+2026-04-21 12:23:00,869 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=Cervantes (Caused by NameResolutionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to resolve 'datos.bne.es' ([Errno -2] Name or service not known)"))
+2026-04-21 12:23:00,880 - INFO -   📡 Intentando: https://datos.bne.es/?p=Cervantes
+2026-04-21 12:23:00,922 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?p=Cervantes (Caused by NameResolutionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to resolve 'datos.bne.es' ([Errno -2] Name or service not known)"))
+2026-04-21 12:23:00,929 - ERROR - ❌ No se encontró una URL de búsqueda válida en datos.bne.es
+2026-04-21 12:23:00,935 - INFO -   ↻ Fallback: buscando por autor...
+2026-04-21 12:23:00,940 - INFO - Buscando autores: Cervantes
+2026-04-21 12:23:00,962 - ERROR - Error buscando autores: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=Cervantes&type=person (Caused by NameResolutionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to resolve 'datos.bne.es' ([Errno -2] Name or service not known)"))
+2026-04-21 12:23:00,967 - INFO -      ✓ Encontradas 0 obras en datos.bne.es
+2026-04-21 12:23:00,981 - INFO - 172.19.0.1 - - [21/Apr/2026 12:23:00] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-23 09:19:44,120 - INFO - 172.19.0.1 - - [23/Apr/2026 09:19:44] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-23 09:19:44,164 - INFO - 📋 [NOMBRE] Buscando obras por título: 'El'
+2026-04-23 09:19:44,165 - INFO -   1️⃣ Buscando en BD local...
+2026-04-23 09:19:44,426 - INFO -      ✓ Encontradas 3 obras en BD local
+2026-04-23 09:19:44,427 - INFO -   2️⃣ Buscando en datos.bne.es...
+2026-04-23 09:19:44,429 - INFO - 🔍 Buscando obras por TÍTULO en datos.bne.es: 'El'
+2026-04-23 09:19:44,429 - INFO -   📡 Intentando: https://datos.bne.es/search?q=El
+2026-04-23 09:20:32,581 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-23 09:20:32,582 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-23 09:22:12,256 - INFO - 172.19.0.1 - - [23/Apr/2026 09:22:12] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-23 09:22:12,267 - INFO - 📋 [NOMBRE] Buscando obras por título: 'El'
+2026-04-23 09:22:12,268 - INFO -   1️⃣ Buscando en BD local...
+2026-04-23 09:22:12,442 - INFO -      ✓ Encontradas 3 obras en BD local
+2026-04-23 09:22:12,444 - INFO -   2️⃣ Buscando en datos.bne.es...
+2026-04-23 09:22:12,444 - INFO - 🔍 Buscando obras por TÍTULO en datos.bne.es: 'El'
+2026-04-23 09:22:12,445 - INFO -   📡 Intentando: https://datos.bne.es/search?q=El
+2026-04-23 09:22:16,606 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /search?q=El (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:16,607 - INFO -   📡 Intentando: https://datos.bne.es/query?q=El
+2026-04-23 09:22:18,860 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /query?q=El (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:18,861 - INFO -   📡 Intentando: https://datos.bne.es/resultados?q=El
+2026-04-23 09:22:21,132 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /resultados?q=El (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:21,133 - INFO -   📡 Intentando: https://datos.bne.es/?q=El
+2026-04-23 09:22:23,392 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:23,392 - INFO -   📡 Intentando: https://datos.bne.es/?p=El
+2026-04-23 09:22:25,655 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?p=El (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:25,656 - ERROR - ❌ No se encontró una URL de búsqueda válida en datos.bne.es
+2026-04-23 09:22:25,657 - INFO -   ↻ Fallback: buscando por autor...
+2026-04-23 09:22:25,658 - INFO - Buscando autores: El
+2026-04-23 09:22:27,946 - ERROR - Error buscando autores: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El&type=person (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:27,947 - INFO -      ✓ Encontradas 0 obras en datos.bne.es
+2026-04-23 09:22:27,952 - INFO - 172.19.0.1 - - [23/Apr/2026 09:22:27] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-23 09:22:34,478 - INFO - 172.19.0.1 - - [23/Apr/2026 09:22:34] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-23 09:22:34,488 - INFO - 📋 [NOMBRE] Buscando obras por título: 'El quijote'
+2026-04-23 09:22:34,489 - INFO -   1️⃣ Buscando en BD local...
+2026-04-23 09:22:34,493 - INFO -      ✓ Encontradas 1 obras en BD local
+2026-04-23 09:22:34,494 - INFO -   2️⃣ Buscando en datos.bne.es...
+2026-04-23 09:22:34,494 - INFO - 🔍 Buscando obras por TÍTULO en datos.bne.es: 'El quijote'
+2026-04-23 09:22:34,495 - INFO -   📡 Intentando: https://datos.bne.es/search?q=El%20quijote
+2026-04-23 09:22:36,781 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /search?q=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:36,781 - INFO -   📡 Intentando: https://datos.bne.es/query?q=El%20quijote
+2026-04-23 09:22:38,961 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /query?q=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:38,962 - INFO -   📡 Intentando: https://datos.bne.es/resultados?q=El%20quijote
+2026-04-23 09:22:41,181 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /resultados?q=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:41,182 - INFO -   📡 Intentando: https://datos.bne.es/?q=El%20quijote
+2026-04-23 09:22:43,404 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:43,404 - INFO -   📡 Intentando: https://datos.bne.es/?p=El%20quijote
+2026-04-23 09:22:45,617 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?p=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:45,618 - ERROR - ❌ No se encontró una URL de búsqueda válida en datos.bne.es
+2026-04-23 09:22:45,618 - INFO -   ↻ Fallback: buscando por autor...
+2026-04-23 09:22:45,619 - INFO - Buscando autores: El quijote
+2026-04-23 09:22:47,890 - ERROR - Error buscando autores: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+quijote&type=person (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-23 09:22:47,891 - INFO -      ✓ Encontradas 0 obras en datos.bne.es
+2026-04-23 09:22:47,893 - INFO - 172.19.0.1 - - [23/Apr/2026 09:22:47] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-23 11:08:09,192 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-23 11:08:09,193 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-23 11:08:54,608 - INFO - 172.19.0.1 - - [23/Apr/2026 11:08:54] "OPTIONS /api/periodicos/rango-fechas?fecha_desde=2015-01-21&fecha_hasta=20015-03-21&page=1&per_page=50 HTTP/1.1" 200 -
+2026-04-23 11:08:54,619 - INFO - 172.19.0.1 - - [23/Apr/2026 11:08:54] "[31m[1mGET /api/periodicos/rango-fechas?fecha_desde=2015-01-21&fecha_hasta=20015-03-21&page=1&per_page=50 HTTP/1.1[0m" 400 -
+2026-04-23 11:08:56,677 - INFO - 172.19.0.1 - - [23/Apr/2026 11:08:56] "[31m[1mGET /api/periodicos/rango-fechas?fecha_desde=2015-01-21&fecha_hasta=20015-03-21&page=1&per_page=50 HTTP/1.1[0m" 400 -
+2026-04-23 11:16:51,042 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.3:5000
+2026-04-23 11:16:51,045 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-23 11:25:17,704 - INFO - 172.19.0.1 - - [23/Apr/2026 11:25:17] "OPTIONS /api/periodicos/rango-fechas?fecha_desde=2015-01-21&fecha_hasta=0026-01-22&page=1&per_page=50 HTTP/1.1" 200 -
+2026-04-23 11:25:17,725 - INFO - 172.19.0.1 - - [23/Apr/2026 11:25:17] "[31m[1mGET /api/periodicos/rango-fechas?fecha_desde=2015-01-21&fecha_hasta=0026-01-22&page=1&per_page=50 HTTP/1.1[0m" 400 -
+2026-04-23 11:33:04,664 - INFO - 172.19.0.1 - - [23/Apr/2026 11:33:04] "OPTIONS /api/periodicos/rango-fechas?fecha_desde=2005-01-21&fecha_hasta=20015-02-21&page=1&per_page=50 HTTP/1.1" 200 -
+2026-04-23 11:33:04,679 - INFO - 172.19.0.1 - - [23/Apr/2026 11:33:04] "[31m[1mGET /api/periodicos/rango-fechas?fecha_desde=2005-01-21&fecha_hasta=20015-02-21&page=1&per_page=50 HTTP/1.1[0m" 400 -
+2026-04-23 11:35:15,455 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.3:5000
+2026-04-23 11:35:15,456 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-23 11:36:44,001 - INFO - 172.19.0.1 - - [23/Apr/2026 11:36:44] "OPTIONS /api/periodicos/rango-fechas?fecha_desde=2005-01-21&fecha_hasta=2015-01-21&page=1&per_page=50 HTTP/1.1" 200 -
+2026-04-23 11:36:44,194 - INFO - 172.19.0.1 - - [23/Apr/2026 11:36:44] "GET /api/periodicos/rango-fechas?fecha_desde=2005-01-21&fecha_hasta=2015-01-21&page=1&per_page=50 HTTP/1.1" 200 -
+2026-04-30 08:53:34,788 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.3:5000
+2026-04-30 08:53:34,790 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-30 09:04:39,398 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-30 09:04:39,399 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-30 09:57:37,142 - INFO - 172.19.0.1 - - [30/Apr/2026 09:57:37] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-30 09:57:37,172 - INFO - 📋 [NOMBRE] Buscando obras por título: 'El quijote'
+2026-04-30 09:57:37,173 - INFO -   1️⃣ Buscando en BD local...
+2026-04-30 09:57:37,677 - INFO -      ✓ Encontradas 1 obras en BD local
+2026-04-30 09:57:37,678 - INFO -   2️⃣ Buscando en datos.bne.es...
+2026-04-30 09:57:37,680 - INFO - 🔍 Buscando obras por TÍTULO en datos.bne.es: 'El quijote'
+2026-04-30 09:57:37,681 - INFO -   📡 Intentando: https://datos.bne.es/search?q=El%20quijote
+2026-04-30 09:58:17,922 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Read timed out. (read timeout=30)
+2026-04-30 09:58:17,924 - INFO -   📡 Intentando: https://datos.bne.es/query?q=El%20quijote
+2026-04-30 09:58:38,799 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /query?q=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 09:58:38,800 - INFO -   📡 Intentando: https://datos.bne.es/resultados?q=El%20quijote
+2026-04-30 09:58:59,937 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /resultados?q=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 09:58:59,938 - INFO -   📡 Intentando: https://datos.bne.es/?q=El%20quijote
+2026-04-30 09:59:21,012 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 09:59:21,013 - INFO -   📡 Intentando: https://datos.bne.es/?p=El%20quijote
+2026-04-30 09:59:41,922 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?p=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 09:59:41,922 - ERROR - ❌ No se encontró una URL de búsqueda válida en datos.bne.es
+2026-04-30 09:59:41,923 - INFO -   ↻ Fallback: buscando por autor...
+2026-04-30 09:59:41,923 - INFO - Buscando autores: El quijote
+2026-04-30 10:00:03,107 - ERROR - Error buscando autores: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+quijote&type=person (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 10:00:03,108 - INFO -      ✓ Encontradas 0 obras en datos.bne.es
+2026-04-30 10:00:03,125 - INFO - 172.19.0.1 - - [30/Apr/2026 10:00:03] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-30 10:22:36,157 - INFO - 172.19.0.1 - - [30/Apr/2026 10:22:36] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-30 10:22:36,175 - INFO - Buscando obra por título: El principito
+2026-04-30 10:22:36,253 - INFO - No encontrada en BD, buscando en datos.bne.es...
+2026-04-30 10:22:36,254 - INFO - Buscando obra por título: El principito
+2026-04-30 10:22:57,425 - ERROR - Error buscando obra por título: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+principito&type=work (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 10:22:57,440 - INFO - 172.19.0.1 - - [30/Apr/2026 10:22:57] "[33mPOST /api/importar/titulo HTTP/1.1[0m" 404 -
+2026-04-30 10:23:22,864 - INFO - 172.19.0.1 - - [30/Apr/2026 10:23:22] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-30 10:23:22,874 - INFO - Buscando obra por título: El Quijote
+2026-04-30 10:23:22,896 - INFO - ✓ Obra encontrada en BD: 1
+2026-04-30 10:23:22,899 - INFO - 172.19.0.1 - - [30/Apr/2026 10:23:22] "POST /api/importar/titulo HTTP/1.1" 200 -
+2026-04-30 10:23:41,870 - INFO - 172.19.0.1 - - [30/Apr/2026 10:23:41] "OPTIONS /api/importar/nombre HTTP/1.1" 200 -
+2026-04-30 10:23:41,879 - INFO - 📋 [NOMBRE] Buscando obras por título: 'El quijote'
+2026-04-30 10:23:41,880 - INFO -   1️⃣ Buscando en BD local...
+2026-04-30 10:23:41,887 - INFO -      ✓ Encontradas 1 obras en BD local
+2026-04-30 10:23:41,887 - INFO -   2️⃣ Buscando en datos.bne.es...
+2026-04-30 10:23:41,888 - INFO - 🔍 Buscando obras por TÍTULO en datos.bne.es: 'El quijote'
+2026-04-30 10:23:41,888 - INFO -   📡 Intentando: https://datos.bne.es/search?q=El%20quijote
+2026-04-30 10:24:02,877 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /search?q=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 10:24:02,878 - INFO -   📡 Intentando: https://datos.bne.es/query?q=El%20quijote
+2026-04-30 10:24:32,839 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Read timed out. (read timeout=30)
+2026-04-30 10:24:32,839 - INFO -   📡 Intentando: https://datos.bne.es/resultados?q=El%20quijote
+2026-04-30 10:25:09,865 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Read timed out. (read timeout=30)
+2026-04-30 10:25:09,866 - INFO -   📡 Intentando: https://datos.bne.es/?q=El%20quijote
+2026-04-30 10:25:30,882 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 10:25:30,884 - INFO -   📡 Intentando: https://datos.bne.es/?p=El%20quijote
+2026-04-30 10:25:52,138 - WARNING -     ⚠️ Error: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?p=El%20quijote (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 10:25:52,139 - ERROR - ❌ No se encontró una URL de búsqueda válida en datos.bne.es
+2026-04-30 10:25:52,140 - INFO -   ↻ Fallback: buscando por autor...
+2026-04-30 10:25:52,140 - INFO - Buscando autores: El quijote
+2026-04-30 10:26:13,069 - ERROR - Error buscando autores: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+quijote&type=person (Caused by NewConnectionError("HTTPSConnection(host='datos.bne.es', port=443): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-04-30 10:26:13,070 - INFO -      ✓ Encontradas 0 obras en datos.bne.es
+2026-04-30 10:26:13,085 - INFO - 172.19.0.1 - - [30/Apr/2026 10:26:13] "POST /api/importar/nombre HTTP/1.1" 200 -
+2026-04-30 11:04:00,855 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.3:5000
+2026-04-30 11:04:00,857 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-30 12:01:21,598 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.4:5000
+2026-04-30 12:01:21,599 - INFO - [33mPress CTRL+C to quit[0m
+2026-04-30 12:01:42,747 - INFO - 172.19.0.1 - - [30/Apr/2026 12:01:42] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-30 12:01:42,763 - INFO - Buscando obra por título: El principito
+2026-04-30 12:01:42,875 - INFO - No encontrada en BD, buscando en datos.bne.es...
+2026-04-30 12:01:42,876 - INFO - Buscando obra por título: El principito
+2026-04-30 12:01:43,096 - ERROR - Error buscando obra por título: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+principito&type=work (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-30 12:01:43,098 - INFO - 172.19.0.1 - - [30/Apr/2026 12:01:43] "[33mPOST /api/importar/titulo HTTP/1.1[0m" 404 -
+2026-04-30 12:02:05,471 - INFO - 172.19.0.1 - - [30/Apr/2026 12:02:05] "OPTIONS /api/importar/titulo HTTP/1.1" 200 -
+2026-04-30 12:02:05,485 - INFO - Buscando obra por título: El Principito y la puerta del cielo
+2026-04-30 12:02:05,490 - INFO - No encontrada en BD, buscando en datos.bne.es...
+2026-04-30 12:02:05,491 - INFO - Buscando obra por título: El Principito y la puerta del cielo
+2026-04-30 12:02:05,637 - ERROR - Error buscando obra por título: HTTPSConnectionPool(host='datos.bne.es', port=443): Max retries exceeded with url: /?q=El+Principito+y+la+puerta+del+cielo&type=work (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
+2026-04-30 12:02:05,640 - INFO - 172.19.0.1 - - [30/Apr/2026 12:02:05] "[33mPOST /api/importar/titulo HTTP/1.1[0m" 404 -
+2026-04-30 12:02:14,643 - INFO - 172.19.0.1 - - [30/Apr/2026 12:02:14] "OPTIONS /api/importar/url HTTP/1.1" 200 -
+2026-04-30 12:02:14,655 - INFO - Importando obra desde URL: https://datos.bne.es/obra/XX6228542.html
+2026-04-30 12:02:14,676 - INFO - Intentando como URL de datos RDF
+2026-04-30 12:02:14,677 - INFO - Obteniendo obra desde URL: https://datos.bne.es/obra/XX6228542.html
+2026-04-30 12:02:35,688 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/obra/XX6228542.html
+2026-04-30 12:02:35,694 - INFO - 172.19.0.1 - - [30/Apr/2026 12:02:35] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -
+2026-04-30 12:03:08,378 - INFO - 172.19.0.1 - - [30/Apr/2026 12:03:08] "OPTIONS /api/importar/url HTTP/1.1" 200 -
+2026-04-30 12:03:08,392 - INFO - Importando obra desde URL: https://datos.bne.es/obra/XX6228542.html
+2026-04-30 12:03:08,398 - INFO - Intentando como URL de datos RDF
+2026-04-30 12:03:08,399 - INFO - Obteniendo obra desde URL: https://datos.bne.es/obra/XX6228542.html
+2026-04-30 12:03:08,706 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/obra/XX6228542.html
+2026-04-30 12:03:08,711 - INFO - 172.19.0.1 - - [30/Apr/2026 12:03:08] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -
+2026-04-30 12:03:11,808 - INFO - Importando obra desde URL: https://datos.bne.es/obra/XX6228542
+2026-04-30 12:03:11,814 - INFO - Intentando como URL de datos RDF
+2026-04-30 12:03:11,815 - INFO - Obteniendo obra desde URL: https://datos.bne.es/obra/XX6228542
+2026-04-30 12:03:12,132 - WARNING - No se pudieron obtener datos completos para: https://datos.bne.es/obra/XX6228542
+2026-04-30 12:03:12,135 - INFO - 172.19.0.1 - - [30/Apr/2026 12:03:12] "[31m[1mPOST /api/importar/url HTTP/1.1[0m" 400 -

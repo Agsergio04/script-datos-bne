@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   datos.bne.es
+  </title>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
+  <meta content="Biblioteca Nacional de España, Linked Data, Datos enlazados, Open Data, Datos abiertos, cultura, cultura heritage, patrimonio cultural, libros, digitalizaciones, videos, mapas" name="keywords"/>
+  <meta content="El portal de datos de la Biblioteca Nacional de España" name="description"/>
+  <link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+  <meta content="datos.bne.es" property="og:title"/>
+  <meta content="Descubre el portal de datos abiertos y enlazados de la Biblioteca Nacional de España" property="og:description"/>
+  <meta content="http://datos.bne.es" property="og:url"/>
+  <meta content="/img/bne-brand-og-2_PRO.png" property="og:image"/>
+  <meta content="website" property="og:type"/>
+  <meta content="datos.bne.es" property="og:site_name"/>
+  <!--link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css")-->
+  <!--link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css")-->
+  <link href="/css/bootstrap-yeti.css" rel="stylesheet"/>
+  <link href="/css/site.css" rel="stylesheet"/>
+  <!-- modernizr-->
+  <script src="/lib/modernizr.min.js" type="text/javascript">
+  </script>
+  <!-- jquery-->
+  <script src="/lib/jquery/jquery.min.js" type="text/javascript">
+  </script>
+  <script>
+   $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();   
+      });
+  </script>
+  <style>
+   .tooltip-inner{
+      
+        max-width:600px;
+        
+      }
+  </style>
+  <!--script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js") -->
+  <!--script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js")-->
+  <!--if lt IE 9script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
+    -->
+  <script>
+   var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-20111465-1']);
+      _gaq.push(['_setDomainName', '.bne.es']);
+      _gaq.push(['_setAllowHash', false]);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+  </script>
+  <script>
+   (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': 
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], 
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); 
+      })(window,document,'script','dataLayer','GTM-58SJH98');
+  </script>
+  <script>
+   $(function() {
+        $('.ancla').on('click', function(e){
+          e.preventDefault();
+          var strAncla = '#' + $(this).data('ancla');
+          $('html,body').animate({scrollTop: $(strAncla).offset().top}, 2000);
+        });
+      });
+  </script>
+ </head>
+ <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+   <iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-58SJH98" style="display:none;visibility:hidden" width="0">
+   </iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <nav class="navbar navbar-default" role="navigation">
+   <div class="container">
+    <div id="inicio">
+     <div class="navbar-header">
+      <button class="navbar-toggle" data-target="#bne-navbar-collapse" data-toggle="collapse" type="button">
+       <span class="sr-only">
+        Toggle navigation
+       </span>
+       <span class="icon-bar">
+       </span>
+       <span class="icon-bar">
+       </span>
+       <span class="icon-bar">
+       </span>
+      </button>
+      <div class="logo">
+       <a class="navbar-brand top" href="/">
+       </a>
+      </div>
+     </div>
+     <div class="collapse navbar-collapse" id="bne-navbar-collapse">
+      <ul class="nav navbar-nav">
+       <li>
+        <a href="/">
+         Inicio
+        </a>
+       </li>
+       <li>
+        <a href="/avanzada">
+         Búsquedas avanzadas
+        </a>
+       </li>
+       <li>
+        <a href="/marcas">
+         Búsqueda de antiguos poseedores
+        </a>
+       </li>
+       <li>
+        <a href="https://www.bne.es/sites/default/files/repositorio-archivos/ayuda-datos-enlazados.pdf" target="_blank">
+         Ayuda
+        </a>
+       </li>
+      </ul>
+      <a class="pull-right hidden-sm hidden-xs" href="/" id="logo">
+       <img alt="Biblioteca Nacional de España" src="/img/logoBNEpositivo.jpg" style="width: 80px"/>
+      </a>
+     </div>
+     <div class="aviso-sincro">
+      <p>
+       "Datos.bne no es un reflejo en tiempo real del catálogo oficial de la BNE, sino que se actualiza periódicamente mediante procesos de carga y transformación de datos"
+      </p>
+      <p>
+       Se recomienda el uso de Mozilla Firefox para la navegación en este buscador
+      </p>
+     </div>
+    </div>
+   </div>
+  </nav>
+  <section class="content">
+   <div class="container">
+    <section class="row-fluid" id="search-container">
+     <!-- if filter enabled keep it like a search filter until disabled-->
+     <!-- this variable is set for typeahead javascript in the foot.jade file-->
+     <form action="/principalfind" id="main-search" method="get" role="search">
+      <div class="search-wrapper">
+       <h1>
+       </h1>
+       <input class="search-term form-control input-lg search-input" id="s" name="s" placeholder="Buscar una persona, grupo, entidad, el título de una obra o un tema. Ej.: Leonardo da Vinci, ONU, Grapes of Wrath, Aztecas" tabindex="1" type="text"/>
+       <input id="type_search" name="type" type="hidden"/>
+       <input class="hidden-xs search-btn pull-right" type="submit" value=""/>
+      </div>
+     </form>
+    </section>
+   </div>
+   <header class="container">
+    <ol class="breadcrumb">
+     <li>
+      <a href="/resource/XX1718747">
+       Cervantes Saavedra, Miguel de (1547-1616)
+      </a>
+     </li>
+     <li>
+      <a href="/resource/XX3383563" style="font-weight: bold;">
+       Don Quijote de la Mancha
+      </a>
+     </li>
+     <li>
+      <a href="/resource/XX3383563spa">
+       Español
+      </a>
+     </li>
+     <li class="active">
+      El ingenioso hidalgo Don Quijote de la Mancha
+     </li>
+    </ol>
+    <div class="page-header">
+     <h3>
+      El ingenioso hidalgo Don Quijote de la Mancha
+     </h3>
+     <div class="title-chevron">
+     </div>
+     <div class="title-chevron">
+      <div class="chevron-nav">
+      </div>
+     </div>
+    </div>
+    <!--include edition/links-section-edition-->
+   </header>
+   <div class="container">
+    <div class="row">
+     <div class="col-sm-8">
+      <div>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <!--+draw_table({resource: edition, heading: [['P3002', 'P3014', 'P3008'], 'P3069','P3080', 'P3003', 'P3001', 'P3006', 'P3027','P3019','P3048','P3068','P3038','P3004','P3012','P3007','P3029','P3009','P3039','P3078','P3079','P3031','P3077','P3082','P3032','P3083','P3061','P3062', 'OP3006','P3046','P3017','P3050','P3072','P3092','P3091','P3090','P3089','P3087','P3086','P3085','P3084']})-->
+        <tr>
+         <td class="label-row">
+          <strong>
+           Título
+          </strong>
+         </td>
+         <td>
+          El ingenioso hidalgo Don Quijote de la Mancha 	;Miguel de Cervantes Saavedra 	;
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Lugar de publicación
+          </strong>
+         </td>
+         <td>
+          Barcelona
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Editorial
+          </strong>
+         </td>
+         <td>
+          Ramón Sopena
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Fecha de publicación
+          </strong>
+         </td>
+         <td>
+          [ca. 1916]
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Descripción física o extensión
+          </strong>
+         </td>
+         <td>
+          892 p.
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Otras características físicas
+          </strong>
+         </td>
+         <td>
+          il.
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Dimensiones
+          </strong>
+         </td>
+         <td>
+          18 cm
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Forma del contenido
+          </strong>
+         </td>
+         <td>
+          Texto (visual)
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Tipo de medio
+          </strong>
+         </td>
+         <td>
+          sin mediación
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <strong>
+           Nota
+          </strong>
+         </td>
+         <td>
+          Bibliografía: p. [19]-25
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <strong>
+           Nota
+          </strong>
+         </td>
+         <td>
+          De p. [30] pasa a p.[33]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <strong>
+           Tipo de recurso relacionado
+          </strong>
+         </td>
+         <td>
+          Biblioteca Digital Hispánica
+         </td>
+        </tr>
+       </table>
+      </div>
+      <div>
+       <h3 data-placement="top" data-toggle="tooltip" title="Información sobre la ubicación de la obra en el depósito de la BNE, y otros datos sobre los ejemplares disponibles.">
+        <h4>
+         Ejemplares disponibles
+         <img data-placement="top" data-toggle="tooltip" src="/img/icono-info-2.svg" style="width: 15px" title="Estas son las acciones que se pueden realizar para acceder a la edición de esta obra."/>
+        </h4>
+       </h3>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          R.MICRO/39817
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV/4798
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV.SEDÓ/8206
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV.SEDÓ/8193
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV.SEDÓ/737
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          DL/2069459
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Ejemplar de conservación
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Alcalá
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV/4814
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV.SEDÓ/715
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          R.MICRO/37377
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV.SEDÓ/738
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV.SEDÓ/907
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV.SEDÓ/754
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV.SEDÓ/735
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+        <tr>
+         <td class="label-row">
+          <strong>
+           Signatura
+          </strong>
+         </td>
+         <td>
+          CERV.SEDÓ/736
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Localización
+          </strong>
+         </td>
+         <td>
+          Sala Cervantes
+         </td>
+        </tr>
+        <tr>
+         <td class="label-row">
+          <strong>
+           Sede
+          </strong>
+         </td>
+         <td>
+          Sede de Recoletos
+         </td>
+        </tr>
+       </table>
+       <div style="margin-top: 20px">
+        <h4 data-placement="top" data-toggle="tooltip" title="Signaturas asociadas disponibles de esta edición.">
+         Más información de ejemplares
+         <span>
+          <img data-placement="top" data-toggle="tooltip" src="/img/icono-info-2.svg" style="width: 15px" title="Signaturas asociadas disponibles de esta edición."/>
+         </span>
+         <a href="javascript:void(document.getElementById('contenido').style.display = (document.getElementById('contenido').style.display == 'none') ? 'block' : 'none' )">
+          +
+         </a>
+        </h4>
+       </div>
+       <div id="contenido" style="display:none">
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV.SEDÓ/8206
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Compra
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           1968
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Nota de procedencia
+           </strong>
+          </td>
+          <td>
+           Juan Sedó Peris-Mencheta
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Información de encuadernación
+           </strong>
+          </td>
+          <td>
+           Encuadernación editorial en cartoné con ilustración
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV/4798
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV.SEDÓ/907
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Compra
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           1968
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Nota de procedencia
+           </strong>
+          </td>
+          <td>
+           Juan Sedó Peris-Mencheta (1908-1966)
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Información de encuadernación
+           </strong>
+          </td>
+          <td>
+           Encuadernación editorial ilustrada en cartón
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV.SEDÓ/735
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Compra
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           1968
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Nota de procedencia
+           </strong>
+          </td>
+          <td>
+           Juan Sedó Peris-Mencheta (1908-1966)
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Información de encuadernación
+           </strong>
+          </td>
+          <td>
+           Encuadernación industrial en tela gris
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV.SEDÓ/715
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Compra
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           1968
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Nota de procedencia
+           </strong>
+          </td>
+          <td>
+           Juan Sedó Peris-Mencheta (1908-1966)
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Información de encuadernación
+           </strong>
+          </td>
+          <td>
+           Encuadernación en holandesa con punta
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV.SEDÓ/736
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Compra
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           1968
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Nota de procedencia
+           </strong>
+          </td>
+          <td>
+           Juan Sedó Peris-Mencheta (1908-1966)
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Información de encuadernación
+           </strong>
+          </td>
+          <td>
+           Encuadernación editorial ilustrada en cartoné
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           DL/2069459
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Donado por
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fuente de adquisición
+           </strong>
+          </td>
+          <td>
+           Ayuntamiento de Ribarroja del Turia,
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           diciembre, 2011
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV.SEDÓ/754
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Compra
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           1968
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Nota de procedencia
+           </strong>
+          </td>
+          <td>
+           Juan Sedó Peris-Mencheta (1908-1966)
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Información de encuadernación
+           </strong>
+          </td>
+          <td>
+           Encuadernación en tela verde Conserva la cubierta original en rústica
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV.SEDÓ/737
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Compra
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           1968
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Nota de procedencia
+           </strong>
+          </td>
+          <td>
+           Juan Sedó Peris-Mencheta (1908-1966)
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Información de encuadernación
+           </strong>
+          </td>
+          <td>
+           Encuadernación editorial ilustrada
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV/4814
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV.SEDÓ/8193
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Compra
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           1968
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Nota de procedencia
+           </strong>
+          </td>
+          <td>
+           Juan Sedó Peris-Mencheta
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Información de encuadernación
+           </strong>
+          </td>
+          <td>
+           Encuadernación editorial en cartoné con ilustración
+          </td>
+         </tr>
+        </table>
+        <table class="table table-condensed table-responsive" style="background-color: #F8F8F8">
+         <!--+draw_table({resource: resource, heading: ['P7001', 'P7002', 'P7003', 'P7004', 'P7005', 'P7006', 'P7028', 'P7029', 'P7027', 'P7007', 'P7008', 'P7010', 'P7012','P7013', 'P7014','P7017','P7018', 'P7019']})-->
+         <tr>
+          <td class="label-row">
+           <strong>
+            Signatura
+           </strong>
+          </td>
+          <td>
+           CERV.SEDÓ/738
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Forma de adquisición
+           </strong>
+          </td>
+          <td>
+           Compra
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Fecha de adquisición
+           </strong>
+          </td>
+          <td>
+           1968
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Nota de procedencia
+           </strong>
+          </td>
+          <td>
+           Juan Sedó Peris-Mencheta (1908-1966)
+          </td>
+         </tr>
+         <tr>
+          <td class="label-row">
+           <strong>
+            Información de encuadernación
+           </strong>
+          </td>
+          <td>
+           Encuadernación editorial ilustrada en cartoné
+          </td>
+         </tr>
+        </table>
+       </div>
+      </div>
+     </div>
+     <div class="col-sm-4 sticky-column">
+      <div>
+       <div>
+        <div class="tipo">
+         <h4 data-placement="top" data-toggle="tooltip" title="Clase de material: material textual, gráfico, musical, audiovisual, cartográfico, revista.">
+          Tipo
+          <span>
+           <img data-placement="top" data-toggle="tooltip" src="/img/icono-info-2.svg" style="width: 15px" title="Clase de material: material textual, gráfico, musical, audiovisual, cartográfico, revista."/>
+          </span>
+         </h4>
+         <p>
+          <!--http://datos.bne.es/find/resultados/?resourceType='+edition.P3064-->
+          <span class="facets filter bg-red" href="#" target="">
+           Libro
+          </span>
+         </p>
+        </div>
+        <div class="temas">
+        </div>
+        <div class="digital">
+         <div style="margin-top: 20px">
+          <h4>
+           Digitalización
+           <span>
+            <img data-placement="top" data-toggle="tooltip" src="/img/icono-info-2.svg" style="width: 15px" title="Esta edición se encuentra disponible en formato digital, pincha sobre la foto para acceder a ella en la Biblioteca Digital Hispánica."/>
+           </span>
+          </h4>
+          <a href="http://bdh-rd.bne.es/viewer.vm?id=0000299181" style="margin-right:5px" target="_blank">
+           <img alt="El ingenioso hidalgo Don Quijote de la Mancha" class="zoomIt" src="http://bdh-rd.bne.es/low.raw?id=0000299181&amp;name=00000001.jpg" style="width:90px;height: 128px;"/>
+          </a>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div style="margin-top: 20px">
+       <h4 data-placement="top" data-toggle="tooltip" title="Estas son las acciones que se pueden realizar para acceder a la edición de esta obra.">
+        Acceder a esta obra
+        <span>
+         <img data-placement="top" data-toggle="tooltip" src="/img/icono-info-2.svg" style="width: 15px" title="Estas son las acciones que se pueden realizar para acceder a la edición de esta obra."/>
+        </span>
+       </h4>
+       <p class="alert alert-info">
+        Este recurso puede obtenerse en la propia Biblioteca Nacional de España, solicitando una copia, o por préstamo interbibliotecario (solo bibliotecas)
+       </p>
+       <div class="download-links">
+        <!-- a.label.label-primary(href='https://sede.bne.gob.es/PAD_web/irSolicitudPeticiones.do?sig='+resource.P4001+"&tit="+edition.label+"&ite="+resource.id, target='_blank') Petición anticipada del documento-->
+        <!-- url="https://sede.bne.gob.es/RDFI_web/irSolicitudReproduccion.do?flex="+flexibleKey+"&lang="+idioma;-->
+        <!-- a.label.label-primary.first-link(href='https://sede.bne.gob.es/RDFI_web/irSolicitudReproduccion.do?flex='+edition.id+"&lang=es_ES", target='_blank') Solicitar reproducción de fondos-->
+        <!-- http://www.gtbib.net/menu_usuario.php?centro=BNE&soy=biblioteca&title=Adelgace con EH 18, tratamiento únicamente externo [Material gráfico] : el secreto para perder peso&aulast=&date=1961-->
+        <!-- a.label.label-primary.first-link(href='https://bne.gtbib.net/menu_usuario.php?centro=BNE&soy=c&title='+edition.label+"&date="+edition.P3006, target='_blank') Solicitar en prestamo interbibliotecario-->
+        <!-- a.label.label-primary.first-link(href='https://sede.bne.gob.es/RDFI_PI_web/irSolicitudReproduccion.do', target='_blank') Solicitar en prestamo interbibliotecario-->
+        <a class="label label-primary" href="https://catalogo.bne.es/discovery/search?query=any,contains,bimo0000659916&amp;tab=LibraryCatalog&amp;search_scope=MyInstitution&amp;vid=34BNE_INST:CATALOGO&amp;lang=es&amp;offset=0" target="_blank">
+         Ver en el catálogo para acceder a opciones
+        </a>
+       </div>
+      </div>
+      <!-- Show items and actions	-->
+      <!--h4(data-toggle="tooltip" data-placement="top" title="Información sobre la ubicación de la obra en el depósito de la BNE, y otros datos sobre los ejemplares disponibles.") Ejemplares disponibles					-->
+     </div>
+    </div>
+   </div>
+   <section class="container" id="otros">
+    <div class="page-header">
+     <!--h3 Descarga en otros formatos -->
+     <h4>
+      Descarga en otros formatos
+     </h4>
+    </div>
+    <div class="download-links">
+     <!--a.label.label-primary(href=edition['@id'].replace('http://datos.bne.es/resource', '/edicion')+'.ttl') RDF (Turtle)-->
+     <a class="label label-primary" href="http://datos.bne.es/resource/bimo0000659916.ttl">
+      Obtener el registro en ttl
+     </a>
+     <span>
+     </span>
+     <a class="label label-primary" href="http://datos.bne.es/resource/bimo0000659916.jsonld">
+      Obtener el registro en JSON-LD
+     </a>
+     <span>
+     </span>
+     <a class="label label-primary" href="https://datos.bne.es/resource/bimo0000659916.rdf">
+      Obtener el registro en RDF/XML
+     </a>
+     <span>
+     </span>
+    </div>
+   </section>
+  </section>
+  <footer>
+   <div class="container">
+    <div class="foot">
+     <div class="foot-acks col-xs-6">
+      <div>
+       <img alt="datos.bne.es" class="img-responsive" id="brand-bne-foot" src="/img/brand_datos_bne.png"/>
+      </div>
+      <div>
+       <h6>
+        Contacto:
+        <a href="#">
+         info.datosenlazados@bne.es
+        </a>
+       </h6>
+       <h6>
+        Desarrollado por el
+        <a href="http://www.oeg-upm.net" target="_blank">
+         Ontology Engineering Group
+        </a>
+        en la
+        <a href="http://www.upm.es" target="_blank">
+         Universidad Politécnica de Madrid
+        </a>
+       </h6>
+       <h6>
+        <a href="https://www.bne.es/es/iniciativas-proyectos/proyecto-datos-enlazados-bne" target="_blank">
+         Acerca de datos.bne.es
+        </a>
+       </h6>
+      </div>
+     </div>
+     <div class="col-xs-6">
+      <div class="pull-right">
+       <a class="navbar-brand" href="/" target="_self">
+        <img alt="datos.bne.es" id="logo-bne-foot" src="/img/logoBNEpositivo.jpg" style="width: 80px"/>
+       </a>
+      </div>
+     </div>
+    </div>
+   </div>
+  </footer>
+  <!-- Bootstrap-->
+  <script src="/lib/bootstrap/dist/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <!-- Typeahead settings-->
+  <script src="/lib/typeahead.js/dist/typeahead.bundle.min.js" type="text/javascript">
+  </script>
+  <script src="/lib/handlebars/handlebars.min.js" type="text/javascript">
+  </script>
+  <!-- D3-->
+  <script src="/lib/d3/d3.min.js" type="text/javascript">
+  </script>
+  <!-- jpages-->
+  <script src="/lib/jpages.min.js" type="text/javascript">
+  </script>
+  <!-- respond.js-->
+  <script src="/lib/respond.min.js" type="text/javascript">
+  </script>
+  <!-- Application Init-->
+  <script src="/js/bne.js" type="text/javascript">
+  </script>
+  <!--Livereload script rendered-->
+  <script src="http://127.0.0.1:35729/livereload.js" type="text/javascript">
+  </script>
+ </body>
+</html>

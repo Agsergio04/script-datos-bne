@@ -1,0 +1,90 @@
+services:
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:18-alpine
+    container_name: bne_database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-bne_db}
+      POSTGRES_USER: ${POSTGRES_USER:-bne_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bne_password_123}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./bd/schema_optimized.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./bd/seeders/seed_data.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    networks:
+      - bne_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bne_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Flask/Python
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: bne_backend
+    environment:
+      FLASK_APP: app.py
+      FLASK_ENV: ${FLASK_ENV:-development}
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-bne_user}:${POSTGRES_PASSWORD:-bne_password_123}@db:5432/${POSTGRES_DB:-bne_db}
+      SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - bne_network
+    command: >
+      sh -c "python -m flask run --host=0.0.0.0"
+
+  # Frontend (Node.js/React)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bne_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - bne_network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin para gestión de BD (opcional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: bne_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - bne_network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+networks:
+  bne_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pgadmin_data:

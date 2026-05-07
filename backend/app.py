@@ -1,0 +1,1309 @@
+"""
+Aplicación Flask para el proyecto BNE
+API REST para gestionar obras, autores y periódicos
+Incluye integración con scraper de datos.bne.es
+"""
+
+import os
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+import logging
+from bne_scraper import BNEScraper
+
+# Configuración
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL',
+    'postgresql+psycopg2://bne_user:bne_password_123@localhost:5432/bne_db'
+)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JSON_SORT_KEYS'] = False
+
+# Inicializar extensiones
+db = SQLAlchemy(app)
+CORS(app)
+
+# Inicializar scraper (verify_ssl=False para resolver problemas con certificados en Windows)
+scraper = BNEScraper(verify_ssl=False)
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# ============================================================
+# MODELOS
+# ============================================================
+
+class Usuario(db.Model):
+    __tablename__ = 'usuario'
+    
+    id_usuario = db.Column(db.BigInteger, primary_key=True)
+    nombre = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(255), unique=True)
+    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+    actualizado_en = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id_usuario,
+            'nombre': self.nombre,
+            'email': self.email,
+            'fecha_creacion': self.fecha_creacion.isoformat() if self.fecha_creacion else None,
+            'actualizado_en': self.actualizado_en.isoformat() if self.actualizado_en else None
+        }
+
+
+class Obra(db.Model):
+    __tablename__ = 'obra'
+    
+    id_obra = db.Column(db.BigInteger, primary_key=True)
+    titulo = db.Column(db.String(500), nullable=False)
+    tipo_publicacion = db.Column(db.String(100))
+    autor_firma = db.Column(db.String(255))
+    nombre_autor = db.Column(db.String(255))
+    anio = db.Column(db.Integer)
+    enlace = db.Column(db.Text, unique=True)
+    fecha = db.Column(db.Date)
+    dia = db.Column(db.Integer)
+    mes = db.Column(db.Integer)
+    num_periodico = db.Column(db.String(100))
+    variante_titulo = db.Column(db.String(255))
+    pseudonimos_autor = db.Column(db.String(255))
+    tema_principal = db.Column(db.String(255))
+    paginas = db.Column(db.String(50))
+    como_citar = db.Column(db.Text)
+    imprenta = db.Column(db.String(255))
+    lugar_impresion = db.Column(db.String(255))
+    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+    actualizado_en = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id_obra,
+            'titulo': self.titulo,
+            'tipo_publicacion': self.tipo_publicacion,
+            'autor_firma': self.autor_firma,
+            'nombre_autor': self.nombre_autor,
+            'anio': self.anio,
+            'enlace': self.enlace,
+            'fecha': self.fecha.isoformat() if self.fecha else None,
+            'dia': self.dia,
+            'mes': self.mes,
+            'num_periodico': self.num_periodico,
+            'variante_titulo': self.variante_titulo,
+            'pseudonimos_autor': self.pseudonimos_autor,
+            'tema_principal': self.tema_principal,
+            'paginas': self.paginas,
+            'como_citar': self.como_citar,
+            'imprenta': self.imprenta,
+            'lugar_impresion': self.lugar_impresion,
+            'fecha_creacion': self.fecha_creacion.isoformat() if self.fecha_creacion else None,
+            'actualizado_en': self.actualizado_en.isoformat() if self.actualizado_en else None
+        }
+    
+    def to_dict_detallado(self):
+        """Devuelve información completa incluyendo datos especializados"""
+        resultado = self.to_dict()
+        
+        # Obtener datos especializados según tipo
+        from sqlalchemy import text
+        
+        tipo = self.tipo_publicacion.lower() if self.tipo_publicacion else ''
+        
+        # Buscar en tabla especializada correspondiente
+        if 'teatro' in tipo or 'dramático' in tipo.lower():
+            teatro = db.session.execute(
+                text("SELECT fuente_procedencia, resumen, modalidad_teatro, otros_motivos FROM teatro WHERE id_obra = :id"),
+                {'id': self.id_obra}
+            ).fetchone()
+            if teatro:
+                resultado['especializado'] = {
+                    'tipo_especifico': 'Teatro',
+                    'fuente_procedencia': teatro[0],
+                    'resumen': teatro[1],
+                    'modalidad': teatro[2],
+                    'otros_motivos': teatro[3]
+                }
+        
+        elif 'novela' in tipo or 'prosa' in tipo.lower():
+            novela = db.session.execute(
+                text("SELECT fragmento_donde_aparece, modalidad_novela, tipo_de_ubicacion, aspectos_formales, observaciones FROM novela WHERE id_obra = :id"),
+                {'id': self.id_obra}
+            ).fetchone()
+            if novela:
+                resultado['especializado'] = {
+                    'tipo_especifico': 'Novela',
+                    'fragmento': novela[0],
+                    'modalidad': novela[1],
+                    'tipo_ubicacion': novela[2],
+                    'aspectos_formales': novela[3],
+                    'observaciones': novela[4]
+                }
+        
+        elif 'periódico' in tipo or 'prensa' in tipo.lower():
+            periodico = db.session.execute(
+                text("SELECT modalidad_periodico, num_periodico, fragmento_donde_aparece FROM periodico WHERE id_obra = :id"),
+                {'id': self.id_obra}
+            ).fetchone()
+            if periodico:
+                resultado['especializado'] = {
+                    'tipo_especifico': 'Periódico',
+                    'modalidad': periodico[0],
+                    'numero': periodico[1],
+                    'fragmento': periodico[2]
+                }
+        
+        elif 'poesía' in tipo or 'poema' in tipo.lower() or 'verso' in tipo.lower():
+            poesia = db.session.execute(
+                text("SELECT aspectos_formales, resumen, fuente_procedencia, modalidad_poesia FROM poesia WHERE id_obra = :id"),
+                {'id': self.id_obra}
+            ).fetchone()
+            if poesia:
+                resultado['especializado'] = {
+                    'tipo_especifico': 'Poesía',
+                    'aspectos_formales': poesia[0],
+                    'resumen': poesia[1],
+                    'fuente_procedencia': poesia[2],
+                    'modalidad': poesia[3]
+                }
+        
+        elif 'música' in tipo or 'música impresa' in tipo.lower():
+            musica = db.session.execute(
+                text("SELECT resumen, aspectos_formales, observaciones, modalidad_musica_impresa FROM musica_impresa WHERE id_obra = :id"),
+                {'id': self.id_obra}
+            ).fetchone()
+            if musica:
+                resultado['especializado'] = {
+                    'tipo_especifico': 'Música Impresa',
+                    'resumen': musica[0],
+                    'aspectos_formales': musica[1],
+                    'observaciones': musica[2],
+                    'modalidad': musica[3]
+                }
+        
+        return resultado
+
+
+class Proyecto(db.Model):
+    __tablename__ = 'proyectos'
+    
+    id_proyecto = db.Column(db.BigInteger, primary_key=True)
+    nombre = db.Column(db.String(255), nullable=False)
+    descripcion = db.Column(db.Text)
+    cita = db.Column(db.Text)
+    usuario_id = db.Column(db.BigInteger, db.ForeignKey('usuario.id_usuario'))
+    laboratorio_id = db.Column(db.BigInteger, db.ForeignKey('laboratorio.id_laboratorio'))
+    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+    actualizado_en = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id_proyecto,
+            'nombre': self.nombre,
+            'descripcion': self.descripcion,
+            'cita': self.cita,
+            'usuario_id': self.usuario_id,
+            'laboratorio_id': self.laboratorio_id,
+            'fecha_creacion': self.fecha_creacion.isoformat() if self.fecha_creacion else None,
+            'actualizado_en': self.actualizado_en.isoformat() if self.actualizado_en else None
+        }
+
+
+# ============================================================
+# RUTAS - SALUD Y ESTADO
+# ============================================================
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Endpoint de health check"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.utcnow().isoformat(),
+        'service': 'BNE Backend API'
+    }), 200
+
+
+@app.route('/api/version', methods=['GET'])
+def get_version():
+    """Obtener versión de la API"""
+    return jsonify({
+        'version': '1.0.0',
+        'name': 'BNE Data Collection API',
+        'timestamp': datetime.utcnow().isoformat()
+    }), 200
+
+
+@app.route('/api/info', methods=['GET'])
+def get_info():
+    """Información del proyecto"""
+    try:
+        # Contar registros
+        usuarios_count = Usuario.query.count()
+        obras_count = Obra.query.count()
+        proyectos_count = Proyecto.query.count()
+        
+        return jsonify({
+            'proyecto': 'Recogida de datos BNE',
+            'descripcion': 'Plataforma para recopilar datos de autores y periódicos de la Biblioteca Nacional de España',
+            'estadisticas': {
+                'usuarios': usuarios_count,
+                'obras': obras_count,
+                'proyectos': proyectos_count
+            },
+            'version': '1.0.0'
+        }), 200
+    except Exception as e:
+        logger.error(f"Error en /api/info: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================
+# RUTAS - OBRAS
+# ============================================================
+
+@app.route('/api/obras', methods=['GET'])
+def get_obras():
+    """Obtener todas las obras con paginación y filtros"""
+    try:
+        # Parámetros de paginación
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        
+        # Filtros
+        tipo = request.args.get('tipo')
+        autor = request.args.get('autor')
+        tema = request.args.get('tema')
+        anio = request.args.get('anio', type=int)
+        fecha_desde = request.args.get('fecha_desde', type=str)
+        fecha_hasta = request.args.get('fecha_hasta', type=str)
+        
+        query = Obra.query
+        
+        if tipo:
+            query = query.filter_by(tipo_publicacion=tipo)
+        if autor:
+            query = query.filter(Obra.nombre_autor.ilike(f'%{autor}%'))
+        if tema:
+            query = query.filter(Obra.tema_principal.ilike(f'%{tema}%'))
+        if anio:
+            query = query.filter_by(anio=anio)
+        
+        # Filtro por rango de fechas
+        if fecha_desde:
+            try:
+                from datetime import datetime
+                fecha_desde_obj = datetime.fromisoformat(fecha_desde).date()
+                query = query.filter(Obra.fecha >= fecha_desde_obj)
+            except:
+                pass
+        
+        if fecha_hasta:
+            try:
+                from datetime import datetime
+                fecha_hasta_obj = datetime.fromisoformat(fecha_hasta).date()
+                query = query.filter(Obra.fecha <= fecha_hasta_obj)
+            except:
+                pass
+        
+        paginated = query.paginate(page=page, per_page=per_page, error_out=False)
+        
+        return jsonify({
+            'data': [obra.to_dict() for obra in paginated.items],
+            'pagination': {
+                'page': page,
+                'per_page': per_page,
+                'total': paginated.total,
+                'pages': paginated.pages
+            }
+        }), 200
+    except Exception as e:
+        logger.error(f"Error en GET /api/obras: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/obras/<int:obra_id>', methods=['GET'])
+def get_obra(obra_id):
+    """Obtener obra específica"""
+    try:
+        obra = Obra.query.get(obra_id)
+        if not obra:
+            return jsonify({'error': 'Obra no encontrada'}), 404
+        return jsonify(obra.to_dict()), 200
+    except Exception as e:
+        logger.error(f"Error en GET /api/obras/{obra_id}: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/obras/<int:obra_id>/detallada', methods=['GET'])
+def get_obra_detallada(obra_id):
+    """Obtener obra con información completa y especializada"""
+    try:
+        obra = Obra.query.get(obra_id)
+        if not obra:
+            return jsonify({'error': 'Obra no encontrada'}), 404
+        return jsonify(obra.to_dict_detallado()), 200
+    except Exception as e:
+        logger.error(f"Error en GET /api/obras/{obra_id}/detallada: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/obras', methods=['POST'])
+def create_obra():
+    """Crear nueva obra"""
+    try:
+        data = request.get_json()
+        
+        # Validar campos requeridos
+        if not data.get('titulo'):
+            return jsonify({'error': 'Título es requerido'}), 400
+        
+        nueva_obra = Obra(
+            titulo=data['titulo'],
+            tipo_publicacion=data.get('tipo_publicacion'),
+            autor_firma=data.get('autor_firma'),
+            nombre_autor=data.get('nombre_autor'),
+            anio=data.get('anio'),
+            enlace=data.get('enlace'),
+            tema_principal=data.get('tema_principal'),
+            paginas=data.get('paginas'),
+            como_citar=data.get('como_citar')
+        )
+        
+        db.session.add(nueva_obra)
+        db.session.commit()
+        
+        logger.info(f"Obra creada: {nueva_obra.id_obra}")
+        return jsonify({
+            'message': 'Obra creada exitosamente',
+            'data': nueva_obra.to_dict()
+        }), 201
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en POST /api/obras: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/obras/<int:obra_id>', methods=['PUT'])
+def update_obra(obra_id):
+    """Actualizar obra"""
+    try:
+        obra = Obra.query.get(obra_id)
+        if not obra:
+            return jsonify({'error': 'Obra no encontrada'}), 404
+        
+        data = request.get_json()
+        
+        # Actualizar campos
+        for key, value in data.items():
+            if hasattr(obra, key):
+                setattr(obra, key, value)
+        
+        obra.actualizado_en = datetime.utcnow()
+        db.session.commit()
+        
+        logger.info(f"Obra actualizada: {obra_id}")
+        return jsonify({
+            'message': 'Obra actualizada exitosamente',
+            'data': obra.to_dict()
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en PUT /api/obras/{obra_id}: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/obras/<int:obra_id>', methods=['DELETE'])
+def delete_obra(obra_id):
+    """Eliminar obra"""
+    try:
+        obra = Obra.query.get(obra_id)
+        if not obra:
+            return jsonify({'error': 'Obra no encontrada'}), 404
+        
+        db.session.delete(obra)
+        db.session.commit()
+        
+        logger.info(f"Obra eliminada: {obra_id}")
+        return jsonify({'message': 'Obra eliminada exitosamente'}), 200
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en DELETE /api/obras/{obra_id}: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================
+# RUTAS - ESTADÍSTICAS
+# ============================================================
+
+@app.route('/api/estadisticas/resumen', methods=['GET'])
+def get_estadisticas():
+    """Obtener estadísticas generales"""
+    try:
+        # Usar raw SQL para vistas
+        from sqlalchemy import text
+        
+        obras_por_tipo = db.session.execute(
+            text("SELECT COUNT(*) as total, tipo_publicacion FROM obra GROUP BY tipo_publicacion")
+        ).fetchall()
+        
+        obras_por_autor = db.session.execute(
+            text("""
+            SELECT nombre_autor, COUNT(*) as total FROM obra 
+            WHERE nombre_autor IS NOT NULL 
+            GROUP BY nombre_autor ORDER BY total DESC LIMIT 10
+            """)
+        ).fetchall()
+        
+        return jsonify({
+            'obras_por_tipo': [{'tipo': row[1], 'total': row[0]} for row in obras_por_tipo],
+            'top_autores': [{'autor': row[0], 'obras': row[1]} for row in obras_por_autor]
+        }), 200
+    except Exception as e:
+        logger.error(f"Error en GET /api/estadisticas/resumen: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================
+# RUTAS - BÚSQUEDA
+# ============================================================
+
+@app.route('/api/buscar', methods=['GET'])
+def search():
+    """Búsqueda global optimizada - devuelve información completa"""
+    try:
+        q = request.args.get('q', '')
+        detallada = request.args.get('detallada', 'false').lower() == 'true'
+        limite = request.args.get('limite', 50, type=int)
+        
+        if not q or len(q) < 3:
+            return jsonify({'error': 'Búsqueda debe tener al menos 3 caracteres'}), 400
+        
+        # Búsqueda más completa en múltiples campos
+        resultados = Obra.query.filter(
+            (Obra.titulo.ilike(f'%{q}%')) |
+            (Obra.nombre_autor.ilike(f'%{q}%')) |
+            (Obra.autor_firma.ilike(f'%{q}%')) |
+            (Obra.tema_principal.ilike(f'%{q}%')) |
+            (Obra.variante_titulo.ilike(f'%{q}%')) |
+            (Obra.pseudonimos_autor.ilike(f'%{q}%')) |
+            (Obra.imprenta.ilike(f'%{q}%'))
+        ).order_by(Obra.anio.desc(), Obra.titulo.asc()).limit(limite).all()
+        
+        # Devolver información detallada si se solicita
+        if detallada:
+            obras_data = [obra.to_dict_detallado() for obra in resultados]
+        else:
+            obras_data = [obra.to_dict() for obra in resultados]
+        
+        # Agrupar por tipo para mejor visualización
+        tipos = {}
+        for obra in resultados:
+            tipo = obra.tipo_publicacion or 'Desconocido'
+            if tipo not in tipos:
+                tipos[tipo] = 0
+            tipos[tipo] += 1
+        
+        return jsonify({
+            'query': q,
+            'total_resultados': len(resultados),
+            'tipos_encontrados': tipos,
+            'resultados': obras_data
+        }), 200
+    except Exception as e:
+        logger.error(f"Error en GET /api/buscar: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================
+# RUTAS - PERIÓDICOS POR RANGO DE FECHAS
+# ============================================================
+
+@app.route('/api/periodicos/rango-fechas', methods=['GET'])
+def get_periodicos_rango_fechas():
+    """
+    Obtener periódicos BIMO en un rango de fechas
+    Parámetros:
+    - fecha_desde: YYYY-MM-DD
+    - fecha_hasta: YYYY-MM-DD
+    - page: número de página (default 1)
+    - per_page: resultados por página (default 20)
+    """
+    try:
+        fecha_desde = request.args.get('fecha_desde', type=str)
+        fecha_hasta = request.args.get('fecha_hasta', type=str)
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        
+        if not fecha_desde or not fecha_hasta:
+            return jsonify({'error': 'Los parámetros fecha_desde y fecha_hasta son obligatorios'}), 400
+        
+        try:
+            from datetime import datetime
+            fecha_desde_obj = datetime.fromisoformat(fecha_desde).date()
+            fecha_hasta_obj = datetime.fromisoformat(fecha_hasta).date()
+            
+            # Validar que las fechas sean razonables (1500-2100)
+            if fecha_desde_obj.year < 1500 or fecha_desde_obj.year > 2100:
+                return jsonify({'error': f'Año inválido en fecha_desde: {fecha_desde_obj.year}. Use rango 1500-2100'}), 400
+            
+            if fecha_hasta_obj.year < 1500 or fecha_hasta_obj.year > 2100:
+                return jsonify({'error': f'Año inválido en fecha_hasta: {fecha_hasta_obj.year}. Use rango 1500-2100'}), 400
+                
+            # Validar que fecha_desde <= fecha_hasta
+            if fecha_desde_obj > fecha_hasta_obj:
+                return jsonify({'error': 'fecha_desde debe ser anterior a fecha_hasta'}), 400
+                
+        except ValueError as ve:
+            return jsonify({'error': f'Formato de fecha inválido. Use YYYY-MM-DD. Detalle: {str(ve)}'}), 400
+        
+        # Buscar periódicos BIMO (tipo_publicacion contiene "periódico")
+        query = Obra.query.filter(
+            Obra.fecha >= fecha_desde_obj,
+            Obra.fecha <= fecha_hasta_obj,
+            (Obra.tipo_publicacion.ilike('%periódico%')) | (Obra.tipo_publicacion.ilike('%prensa%'))
+        ).order_by(Obra.fecha.desc(), Obra.titulo.asc())
+        
+        paginated = query.paginate(page=page, per_page=per_page, error_out=False)
+        
+        return jsonify({
+            'data': [obra.to_dict() for obra in paginated.items],
+            'rango_fechas': {
+                'desde': fecha_desde,
+                'hasta': fecha_hasta
+            },
+            'pagination': {
+                'page': page,
+                'per_page': per_page,
+                'total': paginated.total,
+                'pages': paginated.pages
+            }
+        }), 200
+    except Exception as e:
+        logger.error(f"Error en GET /api/periodicos/rango-fechas: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================
+# RUTAS - SCRAPER E IMPORTACIÓN
+# ============================================================
+
+@app.route('/api/importar/url', methods=['POST'])
+def importar_obra_url():
+    """
+    Importa una obra desde su URL en datos.bne.es
+    Soporta dos tipos de URLs:
+    1. URLs de edición HTML: https://datos.bne.es/edicion/bimo0000659916.html
+    2. URLs de datos RDF: https://datos.bne.es/data/XX123456
+    
+    Body: {"url": "https://datos.bne.es/edicion/bimo0000659916.html"}
+    """
+    try:
+        data = request.get_json()
+        url = data.get('url')
+        
+        if not url:
+            return jsonify({'error': 'URL es requerida'}), 400
+        
+        logger.info(f"Importando obra desde URL: {url}")
+        
+        # 1. Verificar si ya existe en BD
+        existente = Obra.query.filter_by(enlace=url).first()
+        if existente:
+            logger.info(f"✓ Obra encontrada en BD: {existente.id_obra}")
+            return jsonify({
+                'message': 'Obra ya existe en base de datos',
+                'data': existente.to_dict(),
+                'fuente': 'BD local'
+            }), 200
+        
+        # 2. Determinar tipo de URL y extraer datos
+        obra_datos = None
+        
+        # Detectar si es URL de edición HTML
+        if '/edicion/' in url and url.endswith('.html'):
+            logger.info("Detectada URL de edición HTML")
+            obra_datos = scraper.extraer_datos_edicion_html(url)
+        else:
+            # Intentar como URL RDF/datos
+            logger.info("Intentando como URL de datos RDF")
+            obra_datos = scraper.obtener_obra_por_url(url)
+        
+        if not obra_datos:
+            return jsonify({
+                'error': 'No se pudo obtener información de la URL',
+                'tipo_url': 'edicion' if '/edicion/' in url else 'datos',
+                'url': url
+            }), 400
+        
+        # Validar que tiene título
+        if not obra_datos.get('titulo'):
+            return jsonify({
+                'error': 'No se pudo extraer el título de la URL',
+                'datos_obtenidos': list(obra_datos.keys())
+            }), 400
+        
+        # Crear nueva obra (mapear campos)
+        titulo = obra_datos.get('titulo', '')
+        # Limpiar título si tiene punto y coma
+        if ';' in titulo:
+            titulo = titulo.split(';')[0].strip()
+        
+        nueva_obra = Obra(
+            titulo=titulo,
+            tipo_publicacion=obra_datos.get('tipo_publicacion', 'Edición'),
+            autor_firma=obra_datos.get('autor_firma') or obra_datos.get('autor'),
+            nombre_autor=obra_datos.get('autor'),
+            anio=obra_datos.get('anio'),
+            enlace=url,
+            tema_principal=obra_datos.get('forma_contenido') or obra_datos.get('tema_principal'),
+            paginas=obra_datos.get('descripcion_fisica'),
+            como_citar=obra_datos.get('como_citar'),
+            imprenta=obra_datos.get('editorial'),
+            lugar_impresion=obra_datos.get('lugar_publicacion')
+        )
+        
+        db.session.add(nueva_obra)
+        db.session.commit()
+        
+        logger.info(f"✓ Obra importada: {nueva_obra.id_obra}")
+        
+        return jsonify({
+            'message': 'Obra importada exitosamente',
+            'data': nueva_obra.to_dict(),
+            'datos_extraidos': {
+                'titulo': obra_datos.get('titulo'),
+                'autor': obra_datos.get('autor'),
+                'editorial': obra_datos.get('editorial'),
+                'lugar_publicacion': obra_datos.get('lugar_publicacion'),
+                'fecha_publicacion': obra_datos.get('fecha_publicacion'),
+                'descripcion_fisica': obra_datos.get('descripcion_fisica'),
+            }
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en POST /api/importar/url: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/importar/titulo', methods=['POST'])
+def importar_obra_titulo():
+    """
+    Importa una obra buscando por título en datos.bne.es
+    Primero busca en BD antes de hacer scraping
+    
+    Body: {"titulo": "El Quijote"}
+    """
+    try:
+        data = request.get_json()
+        titulo = data.get('titulo')
+        
+        if not titulo or len(titulo) < 3:
+            return jsonify({'error': 'Título es requerido (mínimo 3 caracteres)'}), 400
+        
+        logger.info(f"Buscando obra por título: {titulo}")
+        
+        # 1. PRIMERO: Buscar en BD (búsqueda case-insensitive)
+        existente_bd = Obra.query.filter(
+            Obra.titulo.ilike(f'%{titulo}%')
+        ).first()
+        
+        if existente_bd:
+            logger.info(f"✓ Obra encontrada en BD: {existente_bd.id_obra}")
+            return jsonify({
+                'message': 'Obra ya existe en base de datos',
+                'data': existente_bd.to_dict(),
+                'fuente': 'BD local'
+            }), 200
+        
+        # 2. Si no existe en BD, buscar en datos.bne.es
+        logger.info(f"No encontrada en BD, buscando en datos.bne.es...")
+        obra_datos = scraper.obtener_obra_por_titulo(titulo)
+        
+        if not obra_datos:
+            return jsonify({'error': f'No se encontró obra con título: {titulo}'}), 404
+        
+        # 3. Verificar nuevamente si ya existe por enlace (URL exacta)
+        existente = Obra.query.filter_by(enlace=obra_datos.get('enlace')).first()
+        if existente:
+            return jsonify({
+                'message': 'Obra ya existe en base de datos',
+                'data': existente.to_dict(),
+                'fuente': 'BD local'
+            }), 200
+        
+        # Crear nueva obra con limpieza de título
+        titulo_limpio = obra_datos.get('titulo', '').strip()
+        if ';' in titulo_limpio:
+            titulo_limpio = titulo_limpio.split(';')[0].strip()
+        titulo_limpio = titulo_limpio.strip('"').strip()
+        titulo_limpio = titulo_limpio.rstrip(':').strip()
+        titulo_limpio = ' '.join(titulo_limpio.split())
+        
+        nueva_obra = Obra(
+            titulo=titulo_limpio if titulo_limpio else obra_datos.get('titulo'),
+            tipo_publicacion=obra_datos.get('tipo_publicacion'),
+            autor_firma=obra_datos.get('autor_firma'),
+            nombre_autor=obra_datos.get('nombre_autor'),
+            anio=obra_datos.get('anio'),
+            enlace=obra_datos.get('enlace'),
+            tema_principal=obra_datos.get('tema_principal'),
+            paginas=obra_datos.get('paginas'),
+            como_citar=obra_datos.get('como_citar'),
+            imprenta=obra_datos.get('imprenta'),
+            lugar_impresion=obra_datos.get('lugar_impresion')
+        )
+        
+        db.session.add(nueva_obra)
+        db.session.commit()
+        
+        logger.info(f"✓ Obra importada: {nueva_obra.id_obra}")
+        
+        return jsonify({
+            'message': 'Obra importada exitosamente',
+            'data': nueva_obra.to_dict()
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en POST /api/importar/titulo: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/importar/nombre', methods=['POST'])
+def importar_por_nombre():
+    """
+    Busca obras por NOMBRE/TÍTULO en BD local y datos.bne.es
+    Devuelve información COMPLETA incluyendo datos especializados
+    
+    Body: {"nombre": "Quijote", "limite": 10}
+    """
+    try:
+        data = request.get_json()
+        nombre = data.get('nombre', '').strip()
+        limite = data.get('limite', 20)
+        
+        if not nombre or len(nombre) < 2:
+            return jsonify({'error': 'Nombre requerido (mínimo 2 caracteres)'}), 400
+        
+        logger.info(f"📋 [NOMBRE] Buscando obras por título: '{nombre}'")
+        
+        # 1. Buscar en BD local PRIMERO (más rápido)
+        logger.info(f"  1️⃣ Buscando en BD local...")
+        resultados_bd = Obra.query.filter(
+            Obra.titulo.ilike(f'%{nombre}%')
+        ).order_by(Obra.anio.desc(), Obra.titulo.asc()).limit(limite).all()
+        logger.info(f"     ✓ Encontradas {len(resultados_bd)} obras en BD local")
+        
+        # 2. Buscar DIRECTAMENTE en datos.bne.es
+        logger.info(f"  2️⃣ Buscando en datos.bne.es...")
+        obras_bne = []
+        try:
+            obras_bne = scraper.buscar_obras_por_titulo_bne(nombre, limit=limite)
+            logger.info(f"     ✓ Encontradas {len(obras_bne)} obras en datos.bne.es")
+            
+            # Para cada obra de BNE, intentar obtener datos completos si tiene URL
+            for obra in obras_bne:
+                if 'enlace' in obra and obra['enlace']:
+                    try:
+                        # Si es una URL de edición HTML, extraer datos completos
+                        if '/edicion/' in obra['enlace']:
+                            datos_completos = scraper.extraer_datos_edicion_html(obra['enlace'])
+                            if datos_completos:
+                                obra.update(datos_completos)
+                    except Exception as e:
+                        logger.warning(f"     ⚠️ No se pudieron completar datos de {obra.get('titulo', '')}: {e}")
+        
+        except Exception as e:
+            logger.warning(f"     ⚠️ Error al buscar en datos.bne.es: {e}")
+            obras_bne = []
+        
+        # 3. Armar respuesta COMBINADA - BD local primero con datos detallados
+        result_data = {
+            'nombre_buscado': nombre,
+            'total_encontrados': len(obras_bne) + len(resultados_bd),
+            'estadisticas': {
+                'en_bd_local': len(resultados_bd),
+                'en_datos_bne': len(obras_bne)
+            },
+            'resultados_bd_local': [
+                {
+                    **obra.to_dict_detallado(),  # Incluye datos especializados
+                    'fuente': 'BD local',
+                    'nuevo': False
+                }
+                for obra in resultados_bd
+            ],
+            'resultados_bne': [
+                {
+                    'id': obra.get('id', ''),
+                    'titulo': obra.get('titulo', ''),
+                    'tipo_publicacion': obra.get('tipo_publicacion', ''),
+                    'autor_firma': obra.get('autor_firma', ''),
+                    'nombre_autor': obra.get('nombre_autor', ''),
+                    'anio': obra.get('anio', ''),
+                    'fecha': obra.get('fecha', ''),
+                    'variante_titulo': obra.get('variante_titulo', ''),
+                    'pseudonimos_autor': obra.get('pseudonimos_autor', ''),
+                    'tema_principal': obra.get('tema_principal', ''),
+                    'paginas': obra.get('paginas', ''),
+                    'imprenta': obra.get('imprenta', ''),
+                    'lugar_impresion': obra.get('lugar_impresion', ''),
+                    'como_citar': obra.get('como_citar', ''),
+                    'num_periodico': obra.get('num_periodico', ''),
+                    'descripcion': obra.get('descripcion', ''),
+                    'enlace': obra.get('enlace', ''),
+                    'fuente': 'datos.bne.es',
+                    'nuevo': True  # Marca para saber que es nuevo de BNE
+                }
+                for obra in obras_bne
+            ],
+            'mensaje': f'✅ Búsqueda completada: {len(resultados_bd)} obras en BD local + {len(obras_bne)} en datos.bne.es'
+        }
+        
+        return jsonify(result_data), 200
+    
+    except Exception as e:
+        logger.error(f"❌ Error en /api/importar/nombre: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/importar/lote', methods=['POST'])
+def importar_obras_lote():
+    """
+    Importa múltiples obras desde títulos o URLs (HTML o RDF)
+    Soporta:
+    - URLs de edición: https://datos.bne.es/edicion/bimo0000659916.html
+    - URLs de datos: https://datos.bne.es/data/XX123456
+    - Títulos: "El Quijote"
+    
+    Body: {
+      "obras": [
+        {"url": "https://datos.bne.es/edicion/bimo...html"},
+        {"titulo": "El Quijote"},
+        {"url": "https://datos.bne.es/data/XX123456"}
+      ]
+    }
+    """
+    try:
+        data = request.get_json()
+        obras_input = data.get('obras', [])
+        
+        if not obras_input or not isinstance(obras_input, list):
+            return jsonify({'error': 'Se requiere array de obras'}), 400
+        
+        resultados = {
+            'importadas': [],
+            'existentes': [],
+            'errores': []
+        }
+        
+        for i, item in enumerate(obras_input):
+            try:
+                existente_bd = None
+                obra_datos = None
+                origen = None
+                
+                # PASO 1: Buscar en BD
+                if 'url' in item:
+                    url = item['url'].strip()
+                    existente_bd = Obra.query.filter_by(enlace=url).first()
+                    origen = f"URL: {url[:60]}..."
+                
+                elif 'titulo' in item:
+                    titulo = item['titulo'].strip()
+                    existente_bd = Obra.query.filter(
+                        Obra.titulo.ilike(f'%{titulo}%')
+                    ).first()
+                    origen = f"Título: {titulo}"
+                
+                # Si existe en BD, no hacer scraping
+                if existente_bd:
+                    resultados['existentes'].append({
+                        'id': existente_bd.id_obra,
+                        'titulo': existente_bd.titulo,
+                        'origen': origen,
+                        'fuente': 'BD local'
+                    })
+                    continue
+                
+                # PASO 2: Si no existe en BD, buscar en datos.bne.es
+                if 'url' in item:
+                    url = item['url'].strip()
+                    # Detectar tipo de URL
+                    if '/edicion/' in url and url.endswith('.html'):
+                        logger.info(f"[LOTE {i+1}] Detectada URL de edición HTML")
+                        obra_datos = scraper.extraer_datos_edicion_html(url)
+                    else:
+                        logger.info(f"[LOTE {i+1}] Detectada URL de datos RDF")
+                        obra_datos = scraper.obtener_obra_por_url(url)
+                
+                elif 'titulo' in item:
+                    titulo = item['titulo'].strip()
+                    logger.info(f"[LOTE {i+1}] Buscando por título: {titulo}")
+                    obra_datos = scraper.obtener_obra_por_titulo(titulo)
+                
+                if not obra_datos:
+                    resultados['errores'].append({
+                        'indice': i + 1,
+                        'origen': origen or 'Desconocido',
+                        'error': 'No se pudo obtener información'
+                    })
+                    continue
+                
+                # PASO 3: Verificación final por enlace (URL exacta)
+                url_verificar = item.get('url') if 'url' in item else None
+                if url_verificar:
+                    existente_final = Obra.query.filter_by(enlace=url_verificar).first()
+                    if existente_final:
+                        resultados['existentes'].append({
+                            'id': existente_final.id_obra,
+                            'titulo': existente_final.titulo,
+                            'origen': origen,
+                            'fuente': 'BD local'
+                        })
+                        continue
+                
+                # PASO 4: Limpiar título y crear obra
+                titulo_limpio = obra_datos.get('titulo', '').strip()
+                # Limpiar caracteres especiales y separadores
+                if ';' in titulo_limpio:
+                    titulo_limpio = titulo_limpio.split(';')[0].strip()
+                # Remover comillas al inicio y final
+                titulo_limpio = titulo_limpio.strip('"').strip()
+                # Remover dos puntos finales
+                titulo_limpio = titulo_limpio.rstrip(':').strip()
+                # Remover espacios extras
+                titulo_limpio = ' '.join(titulo_limpio.split())
+                
+                nueva_obra = Obra(
+                    titulo=titulo_limpio if titulo_limpio else 'Sin título',
+                    tipo_publicacion=obra_datos.get('tipo_publicacion', 'Edición'),
+                    autor_firma=obra_datos.get('autor_firma') or obra_datos.get('autor'),
+                    nombre_autor=obra_datos.get('autor') or obra_datos.get('nombre_autor'),
+                    anio=obra_datos.get('anio'),
+                    enlace=item.get('url', ''),
+                    tema_principal=obra_datos.get('forma_contenido') or obra_datos.get('tema_principal'),
+                    paginas=obra_datos.get('descripcion_fisica') or obra_datos.get('paginas'),
+                    como_citar=obra_datos.get('como_citar'),
+                    imprenta=obra_datos.get('editorial') or obra_datos.get('imprenta'),
+                    lugar_impresion=obra_datos.get('lugar_publicacion')
+                )
+                
+                db.session.add(nueva_obra)
+                db.session.commit()
+                
+                resultados['importadas'].append({
+                    'id': nueva_obra.id_obra,
+                    'titulo': nueva_obra.titulo,
+                    'origen': origen,
+                    'fuente': 'datos.bne.es'
+                })
+                
+                logger.info(f"[LOTE {i+1}] ✓ Importada: {nueva_obra.titulo}")
+                
+            except Exception as e:
+                logger.error(f"[LOTE {i+1}] Error: {e}")
+                resultados['errores'].append({
+                    'indice': i + 1,
+                    'origen': origen or 'Desconocido',
+                    'error': str(e)
+                })
+        
+        total = len(resultados['importadas']) + len(resultados['existentes']) + len(resultados['errores'])
+        
+        logger.info(f"📊 LOTE COMPLETADO: {total} obras (✓{len(resultados['importadas'])}, 📚{len(resultados['existentes'])}, ✗{len(resultados['errores'])})")
+        
+        return jsonify({
+            'message': f'Procesadas {total} obras',
+            'estadisticas': {
+                'importadas': len(resultados['importadas']),
+                'existentes': len(resultados['existentes']),
+                'errores': len(resultados['errores']),
+                'total': total
+            },
+            'resultados': resultados
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"❌ Error fatal en POST /api/importar/lote: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/importar/edicion/html', methods=['POST'])
+def importar_edicion_html():
+    """
+    Importa una edición desde una página HTML de datos.bne.es
+    Extrae datos estructurados de URLs como:
+    https://datos.bne.es/edicion/bimo0000659916.html
+    
+    Body: {"url": "https://datos.bne.es/edicion/bimo0000659916.html"}
+    """
+    try:
+        data = request.get_json()
+        url = data.get('url')
+        
+        if not url:
+            return jsonify({'error': 'URL es requerida'}), 400
+        
+        if '/edicion/' not in url:
+            return jsonify({'error': 'URL debe ser de una edición de datos.bne.es (contener /edicion/)'}), 400
+        
+        logger.info(f"Importando edición desde HTML: {url}")
+        
+        # Verificar si ya existe por URL
+        existente = Obra.query.filter_by(enlace=url).first()
+        if existente:
+            logger.info(f"✓ Edición ya importada: {existente.id_obra}")
+            return jsonify({
+                'message': 'Edición ya existe en base de datos',
+                'data': existente.to_dict(),
+                'fuente': 'BD local'
+            }), 200
+        
+        # Extraer datos del HTML
+        logger.info("Extrayendo datos del HTML...")
+        datos_edicion = scraper.extraer_datos_edicion_html(url)
+        
+        if not datos_edicion:
+            return jsonify({
+                'error': 'No se pudo extraer información de la página',
+                'url': url
+            }), 400
+        
+        # Validar que tiene título
+        if not datos_edicion.get('titulo'):
+            return jsonify({
+                'error': 'No se pudo extraer el título de la edición',
+                'url': url,
+                'datos_obtenidos': list(datos_edicion.keys())
+            }), 400
+        
+        # Crear nueva obra
+        nueva_obra = Obra(
+            titulo=datos_edicion.get('titulo'),
+            tipo_publicacion='Edición',
+            autor_firma=datos_edicion.get('autor_firma'),
+            nombre_autor=datos_edicion.get('autor'),
+            anio=None,  # Extraer de fecha si es posible
+            enlace=url,
+            tema_principal=datos_edicion.get('forma_contenido'),
+            paginas=datos_edicion.get('descripcion_fisica'),
+            como_citar=None
+        )
+        
+        db.session.add(nueva_obra)
+        db.session.commit()
+        
+        logger.info(f"✓ Edición importada: {nueva_obra.id_obra}")
+        
+        return jsonify({
+            'message': 'Edición importada exitosamente',
+            'data': nueva_obra.to_dict(),
+            'datos_extraidos': {
+                'titulo': datos_edicion.get('titulo'),
+                'autor': datos_edicion.get('autor'),
+                'autor_firma': datos_edicion.get('autor_firma'),
+                'editorial': datos_edicion.get('editorial'),
+                'lugar_publicacion': datos_edicion.get('lugar_publicacion'),
+                'fecha_publicacion': datos_edicion.get('fecha_publicacion'),
+                'descripcion_fisica': datos_edicion.get('descripcion_fisica'),
+                'dimensiones': datos_edicion.get('dimensiones'),
+                'forma_contenido': datos_edicion.get('forma_contenido'),
+                'tipo_medio': datos_edicion.get('tipo_medio'),
+                'notas': datos_edicion.get('notas', []),
+                'recursos_relacionados': datos_edicion.get('recursos_relacionados', [])
+            }
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en POST /api/importar/edicion/html: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================
+# MANEJO DE ERRORES
+# ============================================================
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Endpoint no encontrado'}), 404
+
+
+# ============================================================
+# RUTAS - BÚSQUEDA DE DATASETS EN KAGGLE
+# ============================================================
+
+@app.route('/api/buscar-datasets/kaggle', methods=['POST'])
+def buscar_datasets_kaggle():
+    """
+    Busca datasets en Kaggle usando la API oficial
+    
+    REQUISITO: Credenciales de Kaggle configuradas
+    - Crear cuenta en https://www.kaggle.com
+    - Ir a Settings → API → Create New API Token
+    - Guardar archivo en ~/.kaggle/kaggle.json (auto-detectado)
+    
+    Body: {
+        "query": "periódicos historia españa",
+        "num_resultados": 10,
+        "sort_by": "votes",  # votes, newest, downloads
+        "license": "all"     # all, cc, cc0, gpl, odb, etc
+    }
+    
+    Response: {
+        "query": "periódicos",
+        "fuente": "kaggle",
+        "cantidad": 5,
+        "resultados": [
+            {
+                "titulo": "user/dataset-name",
+                "descripcion": "Spanish Newspapers Collection",
+                "url": "https://www.kaggle.com/datasets/user/dataset-name",
+                "descargas": 1245,
+                "votos": 89,
+                "tamaño": "2.5 GB",
+                "actualizado": "2024-01-15"
+            },
+            ...
+        ],
+        "mensaje": "✅ Búsqueda completada: 5 datasets encontrados"
+    }
+    """
+    try:
+        data = request.get_json()
+        query = data.get('query', '').strip()
+        num_resultados = data.get('num_resultados', 10)
+        sort_by = data.get('sort_by', 'votes')  # votes, newest, downloads
+        license_filter = data.get('license', 'all')
+        
+        if not query or len(query) < 3:
+            return jsonify({'error': 'Query debe tener al menos 3 caracteres'}), 400
+        
+        if num_resultados < 1 or num_resultados > 100:
+            return jsonify({'error': 'num_resultados debe estar entre 1 y 100'}), 400
+        
+        logger.info(f"🔍 [KAGGLE] Buscando datasets: '{query}'")
+        
+        try:
+            from kaggle.api.kaggle_api_extended import KaggleApi
+            
+            # Inicializar API de Kaggle (requiere ~/.kaggle/kaggle.json)
+            api = KaggleApi()
+            api.authenticate()
+            
+            logger.info(f"  ✓ Autenticación en Kaggle exitosa")
+            
+            # Realizar búsqueda
+            logger.info(f"  ⏳ Buscando {num_resultados} datasets...")
+            
+            datasets = api.dataset_list(
+                search=query,
+                sort_by=sort_by,
+                max_size=None,
+                file_type='all',
+                license=license_filter,
+                page_size=num_resultados
+            )
+            
+            # Procesar resultados
+            resultados = []
+            for idx, dataset in enumerate(datasets):
+                if idx >= num_resultados:
+                    break
+                
+                try:
+                    # Obtener información detallada del dataset
+                    resultado = {
+                        'indice': idx + 1,
+                        'titulo': dataset.ref,  # "user/dataset-name"
+                        'descripcion': dataset.title,
+                        'url': f"https://www.kaggle.com/datasets/{dataset.ref}",
+                        'descargas': getattr(dataset, 'download_count', 0),
+                        'votos': getattr(dataset, 'voteCount', 0),
+                        'likes': getattr(dataset, 'medalCount', 0),
+                        'actualizado': str(getattr(dataset, 'lastUpdated', 'N/A')),
+                        'creador': dataset.ref.split('/')[0],  # Extraer usuario
+                        'tamaño': getattr(dataset, 'datasetSize', 'N/A'),
+                        'topicTags': getattr(dataset, 'topicTags', [])
+                    }
+                    resultados.append(resultado)
+                except Exception as e:
+                    logger.warning(f"  ⚠️ Error procesando dataset {idx + 1}: {e}")
+                    continue
+            
+            logger.info(f"  ✓ Encontrados {len(resultados)} datasets")
+            
+            return jsonify({
+                'query': query,
+                'fuente': 'kaggle',
+                'cantidad': len(resultados),
+                'parametros': {
+                    'sort_by': sort_by,
+                    'license': license_filter,
+                    'solicitados': num_resultados
+                },
+                'resultados': resultados,
+                'mensaje': f'✅ Búsqueda completada: {len(resultados)} datasets encontrados en Kaggle'
+            }), 200
+        
+        except ImportError:
+            return jsonify({
+                'error': 'Librería kaggle no instalada',
+                'instrucciones': 'Ejecuta: pip install kaggle'
+            }), 501
+        
+        except Exception as e:
+            error_msg = str(e)
+            
+            # Detectar si es error de autenticación
+            if 'kaggle.json' in error_msg or 'Credentials' in error_msg:
+                return jsonify({
+                    'error': 'Credenciales de Kaggle no configuradas',
+                    'instrucciones': [
+                        '1. Crear cuenta en https://www.kaggle.com',
+                        '2. Ir a Settings → Account → API → Create New API Token',
+                        '3. Descargar kaggle.json',
+                        '4. Guardar en ~/.kaggle/kaggle.json',
+                        '5. En Windows: C:\\Users\\{usuario}\\.kaggle\\kaggle.json'
+                    ]
+                }), 401
+            
+            logger.error(f"❌ Error en búsqueda Kaggle: {error_msg}")
+            return jsonify({'error': f'Error buscando en Kaggle: {error_msg}'}), 500
+    
+    except Exception as e:
+        logger.error(f"❌ Error en POST /api/buscar-datasets/kaggle: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return jsonify({'error': 'Error interno del servidor'}), 500
+
+
+# ============================================================
+# INICIALIZACIÓN
+# ============================================================
+
+def create_app():
+    """Factory function para crear la aplicación"""
+    with app.app_context():
+        db.create_all()
+    return app
+
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run(debug=os.environ.get('FLASK_ENV') == 'development', host='0.0.0.0', port=5000)
