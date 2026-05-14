@@ -72,7 +72,7 @@ class Obra(db.Model):
     variante_titulo = db.Column(db.String(255))
     pseudonimos_autor = db.Column(db.String(255))
     tema_principal = db.Column(db.String(255))
-    paginas = db.Column(db.String(50))
+    paginas = db.Column(db.String(500))
     como_citar = db.Column(db.Text)
     imprenta = db.Column(db.String(255))
     lugar_impresion = db.Column(db.String(255))
@@ -693,81 +693,127 @@ def importar_obra_url():
 @app.route('/api/importar/titulo', methods=['POST'])
 def importar_obra_titulo():
     """
-    Importa una obra buscando por título en datos.bne.es
-    Primero busca en BD antes de hacer scraping
-    
-    Body: {"titulo": "El Quijote"}
+    Busca obras cuyo título contenga la frase indicada e importa todas las que hagan match.
+    Acepta múltiples frases separadas por comas.
+
+    Body: {"titulo": "La Vanguardia, periódico de damas"}
     """
     try:
+        from sqlalchemy import or_
+
         data = request.get_json()
         titulo = data.get('titulo')
-        
-        if not titulo or len(titulo) < 3:
-            return jsonify({'error': 'Título es requerido (mínimo 3 caracteres)'}), 400
-        
-        logger.info(f"Buscando obra por título: {titulo}")
-        
-        # 1. PRIMERO: Buscar en BD (búsqueda case-insensitive)
-        existente_bd = Obra.query.filter(
-            Obra.titulo.ilike(f'%{titulo}%')
-        ).first()
-        
-        if existente_bd:
-            logger.info(f"✓ Obra encontrada en BD: {existente_bd.id_obra}")
-            return jsonify({
-                'message': 'Obra ya existe en base de datos',
-                'data': existente_bd.to_dict(),
+
+        if not titulo or len(titulo) < 2:
+            return jsonify({'error': 'Se requiere al menos un término de búsqueda'}), 400
+
+        # Dividir por comas para permitir múltiples frases de título
+        keywords = [k.strip() for k in titulo.split(',') if len(k.strip()) >= 2]
+        if not keywords:
+            keywords = [titulo.strip()]
+
+        logger.info(f"Buscando obras cuyos títulos contienen: {keywords}")
+
+        resultados = {'importadas': [], 'existentes': [], 'errores': []}
+
+        # 1. Registrar todas las que ya existen en BD (match con cualquier keyword)
+        filtros = [Obra.titulo.ilike(f'%{kw}%') for kw in keywords]
+        existentes_bd = Obra.query.filter(or_(*filtros)).all()
+        for obra in existentes_bd:
+            resultados['existentes'].append({
+                'id': obra.id_obra,
+                'titulo': obra.titulo,
                 'fuente': 'BD local'
-            }), 200
-        
-        # 2. Si no existe en BD, buscar en datos.bne.es
-        logger.info(f"No encontrada en BD, buscando en datos.bne.es...")
-        obra_datos = scraper.obtener_obra_por_titulo(titulo)
-        
-        if not obra_datos:
-            return jsonify({'error': f'No se encontró obra con título: {titulo}'}), 404
-        
-        # 3. Verificar nuevamente si ya existe por enlace (URL exacta)
-        existente = Obra.query.filter_by(enlace=obra_datos.get('enlace')).first()
-        if existente:
-            return jsonify({
-                'message': 'Obra ya existe en base de datos',
-                'data': existente.to_dict(),
-                'fuente': 'BD local'
-            }), 200
-        
-        # Crear nueva obra con limpieza de título
-        titulo_limpio = obra_datos.get('titulo', '').strip()
-        if ';' in titulo_limpio:
-            titulo_limpio = titulo_limpio.split(';')[0].strip()
-        titulo_limpio = titulo_limpio.strip('"').strip()
-        titulo_limpio = titulo_limpio.rstrip(':').strip()
-        titulo_limpio = ' '.join(titulo_limpio.split())
-        
-        nueva_obra = Obra(
-            titulo=titulo_limpio if titulo_limpio else obra_datos.get('titulo'),
-            tipo_publicacion=obra_datos.get('tipo_publicacion'),
-            autor_firma=obra_datos.get('autor_firma'),
-            nombre_autor=obra_datos.get('nombre_autor'),
-            anio=obra_datos.get('anio'),
-            enlace=obra_datos.get('enlace'),
-            tema_principal=obra_datos.get('tema_principal'),
-            paginas=obra_datos.get('paginas'),
-            como_citar=obra_datos.get('como_citar'),
-            imprenta=obra_datos.get('imprenta'),
-            lugar_impresion=obra_datos.get('lugar_impresion')
-        )
-        
-        db.session.add(nueva_obra)
-        db.session.commit()
-        
-        logger.info(f"✓ Obra importada: {nueva_obra.id_obra}")
-        
+            })
+        logger.info(f"  ✓ {len(existentes_bd)} obras existentes en BD")
+
+        # 2. Buscar TODAS las obras en datos.bne.es
+        logger.info(f"  Buscando en datos.bne.es...")
+        obras_bne = []
+        try:
+            obras_bne = scraper.buscar_obras_por_titulo_bne(titulo, limit=50)
+            logger.info(f"  ✓ {len(obras_bne)} obras encontradas en BNE")
+        except Exception as e:
+            logger.warning(f"  ⚠️ Error al buscar en datos.bne.es: {e}")
+
+        # 3. Importar las nuevas de BNE
+        for obra_datos in obras_bne:
+            try:
+                enlace = obra_datos.get('enlace') or obra_datos.get('url')
+
+                # Verificar si ya existe por enlace
+                if enlace:
+                    existente = Obra.query.filter_by(enlace=enlace).first()
+                    if existente:
+                        if not any(e['id'] == existente.id_obra for e in resultados['existentes']):
+                            resultados['existentes'].append({
+                                'id': existente.id_obra,
+                                'titulo': existente.titulo,
+                                'fuente': 'BD local'
+                            })
+                        continue
+
+                # Obtener datos completos si es URL de edición HTML
+                if enlace and '/edicion/' in enlace:
+                    try:
+                        datos_completos = scraper.extraer_datos_edicion_html(enlace)
+                        if datos_completos:
+                            obra_datos.update(datos_completos)
+                    except Exception as e:
+                        logger.warning(f"  ⚠️ No se pudieron completar datos de {obra_datos.get('titulo', '')}: {e}")
+
+                titulo_limpio = obra_datos.get('titulo', '').strip()
+                if ';' in titulo_limpio:
+                    titulo_limpio = titulo_limpio.split(';')[0].strip()
+                titulo_limpio = titulo_limpio.strip('"').strip().rstrip(':').strip()
+                titulo_limpio = ' '.join(titulo_limpio.split())
+
+                nueva_obra = Obra(
+                    titulo=titulo_limpio if titulo_limpio else 'Sin título',
+                    tipo_publicacion=obra_datos.get('tipo_publicacion'),
+                    autor_firma=obra_datos.get('autor_firma'),
+                    nombre_autor=obra_datos.get('nombre_autor') or obra_datos.get('autor'),
+                    anio=obra_datos.get('anio'),
+                    enlace=enlace,
+                    tema_principal=obra_datos.get('tema_principal') or obra_datos.get('forma_contenido'),
+                    paginas=obra_datos.get('paginas') or obra_datos.get('descripcion_fisica'),
+                    como_citar=obra_datos.get('como_citar'),
+                    imprenta=obra_datos.get('imprenta') or obra_datos.get('editorial'),
+                    lugar_impresion=obra_datos.get('lugar_impresion') or obra_datos.get('lugar_publicacion')
+                )
+
+                db.session.add(nueva_obra)
+                db.session.commit()
+
+                resultados['importadas'].append({
+                    'id': nueva_obra.id_obra,
+                    'titulo': nueva_obra.titulo,
+                    'fuente': 'datos.bne.es'
+                })
+                logger.info(f"  ✓ Importada: {nueva_obra.titulo}")
+
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"  ✗ Error importando '{obra_datos.get('titulo', '')}': {e}")
+                resultados['errores'].append({
+                    'titulo': obra_datos.get('titulo', 'Desconocido'),
+                    'error': str(e)
+                })
+
+        total = len(resultados['importadas']) + len(resultados['existentes']) + len(resultados['errores'])
+        logger.info(f"✓ Título completado: {total} obras (✓{len(resultados['importadas'])}, 📚{len(resultados['existentes'])}, ✗{len(resultados['errores'])})")
+
         return jsonify({
-            'message': 'Obra importada exitosamente',
-            'data': nueva_obra.to_dict()
-        }), 201
-        
+            'message': f'Búsqueda por título "{titulo}" completada',
+            'estadisticas': {
+                'importadas': len(resultados['importadas']),
+                'existentes': len(resultados['existentes']),
+                'errores': len(resultados['errores']),
+                'total': total
+            },
+            'resultados': resultados
+        }), 200
+
     except Exception as e:
         db.session.rollback()
         logger.error(f"Error en POST /api/importar/titulo: {e}")
@@ -777,96 +823,134 @@ def importar_obra_titulo():
 @app.route('/api/importar/nombre', methods=['POST'])
 def importar_por_nombre():
     """
-    Busca obras por NOMBRE/TÍTULO en BD local y datos.bne.es
-    Devuelve información COMPLETA incluyendo datos especializados
-    
+    Busca obras por TÍTULO en BD local y datos.bne.es.
+    Las obras encontradas en BNE que no estén en BD se guardan automáticamente.
+
     Body: {"nombre": "Quijote", "limite": 10}
     """
     try:
         data = request.get_json()
         nombre = data.get('nombre', '').strip()
         limite = data.get('limite', 20)
-        
+
         if not nombre or len(nombre) < 2:
             return jsonify({'error': 'Nombre requerido (mínimo 2 caracteres)'}), 400
-        
+
         logger.info(f"📋 [NOMBRE] Buscando obras por título: '{nombre}'")
-        
-        # 1. Buscar en BD local PRIMERO (más rápido)
+
+        # 1. Buscar en BD local
         logger.info(f"  1️⃣ Buscando en BD local...")
         resultados_bd = Obra.query.filter(
             Obra.titulo.ilike(f'%{nombre}%')
         ).order_by(Obra.anio.desc(), Obra.titulo.asc()).limit(limite).all()
         logger.info(f"     ✓ Encontradas {len(resultados_bd)} obras en BD local")
-        
-        # 2. Buscar DIRECTAMENTE en datos.bne.es
+
+        # 2. Buscar en datos.bne.es
         logger.info(f"  2️⃣ Buscando en datos.bne.es...")
-        obras_bne = []
+        obras_bne_raw = []
         try:
-            obras_bne = scraper.buscar_obras_por_titulo_bne(nombre, limit=limite)
-            logger.info(f"     ✓ Encontradas {len(obras_bne)} obras en datos.bne.es")
-            
-            # Para cada obra de BNE, intentar obtener datos completos si tiene URL
-            for obra in obras_bne:
-                if 'enlace' in obra and obra['enlace']:
-                    try:
-                        # Si es una URL de edición HTML, extraer datos completos
-                        if '/edicion/' in obra['enlace']:
-                            datos_completos = scraper.extraer_datos_edicion_html(obra['enlace'])
-                            if datos_completos:
-                                obra.update(datos_completos)
-                    except Exception as e:
-                        logger.warning(f"     ⚠️ No se pudieron completar datos de {obra.get('titulo', '')}: {e}")
-        
+            obras_bne_raw = scraper.buscar_obras_por_titulo_bne(nombre, limit=limite)
+            logger.info(f"     ✓ Encontradas {len(obras_bne_raw)} obras en datos.bne.es")
         except Exception as e:
             logger.warning(f"     ⚠️ Error al buscar en datos.bne.es: {e}")
-            obras_bne = []
-        
-        # 3. Armar respuesta COMBINADA - BD local primero con datos detallados
-        result_data = {
+
+        # 3. Para cada obra de BNE: comprobar si existe en BD y guardar si no está
+        guardadas = []
+        ya_en_bd = []
+        errores_bne = []
+
+        for obra_datos in obras_bne_raw:
+            try:
+                enlace = obra_datos.get('enlace') or obra_datos.get('url')
+
+                # Comprobar si ya existe en BD por enlace
+                if enlace:
+                    existente = Obra.query.filter_by(enlace=enlace).first()
+                    if existente:
+                        ya_en_bd.append({
+                            'id': existente.id_obra,
+                            'titulo': existente.titulo,
+                            'enlace': enlace,
+                            'fuente': 'BD local'
+                        })
+                        logger.info(f"     📚 Ya existe: {existente.titulo}")
+                        continue
+
+                # Intentar obtener datos completos desde HTML si es URL de edición
+                if enlace and '/edicion/' in enlace:
+                    try:
+                        datos_completos = scraper.extraer_datos_edicion_html(enlace)
+                        if datos_completos:
+                            obra_datos.update(datos_completos)
+                    except Exception as e:
+                        logger.warning(f"     ⚠️ No se pudieron completar datos de '{obra_datos.get('titulo', '')}': {e}")
+
+                # Limpiar título
+                titulo_limpio = obra_datos.get('titulo', '').strip()
+                if ';' in titulo_limpio:
+                    titulo_limpio = titulo_limpio.split(';')[0].strip()
+                titulo_limpio = titulo_limpio.strip('"').strip().rstrip(':').strip()
+                titulo_limpio = ' '.join(titulo_limpio.split())
+
+                if not titulo_limpio:
+                    continue
+
+                # Guardar en BD
+                nueva_obra = Obra(
+                    titulo=titulo_limpio,
+                    tipo_publicacion=obra_datos.get('tipo_publicacion'),
+                    autor_firma=obra_datos.get('autor_firma'),
+                    nombre_autor=obra_datos.get('nombre_autor') or obra_datos.get('autor'),
+                    anio=obra_datos.get('anio'),
+                    enlace=enlace,
+                    tema_principal=obra_datos.get('tema_principal') or obra_datos.get('forma_contenido'),
+                    paginas=obra_datos.get('paginas') or obra_datos.get('descripcion_fisica'),
+                    como_citar=obra_datos.get('como_citar'),
+                    imprenta=obra_datos.get('imprenta') or obra_datos.get('editorial'),
+                    lugar_impresion=obra_datos.get('lugar_impresion') or obra_datos.get('lugar_publicacion')
+                )
+                db.session.add(nueva_obra)
+                db.session.commit()
+
+                guardadas.append({
+                    'id': nueva_obra.id_obra,
+                    'titulo': nueva_obra.titulo,
+                    'enlace': enlace or '',
+                    'fuente': 'datos.bne.es'
+                })
+                logger.info(f"     ✓ Guardada nueva obra: {nueva_obra.titulo}")
+
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"     ✗ Error guardando '{obra_datos.get('titulo', '')}': {e}")
+                errores_bne.append({
+                    'titulo': obra_datos.get('titulo', 'Desconocido'),
+                    'error': str(e)
+                })
+
+        total_bne = len(guardadas) + len(ya_en_bd) + len(errores_bne)
+        logger.info(f"✓ Completado: {len(resultados_bd)} en BD local, {len(guardadas)} nuevas guardadas, {len(ya_en_bd)} ya existían")
+
+        return jsonify({
             'nombre_buscado': nombre,
-            'total_encontrados': len(obras_bne) + len(resultados_bd),
+            'total_encontrados': len(resultados_bd) + total_bne,
             'estadisticas': {
                 'en_bd_local': len(resultados_bd),
-                'en_datos_bne': len(obras_bne)
+                'en_datos_bne': total_bne,
+                'guardadas_nuevas': len(guardadas),
+                'ya_existentes': len(ya_en_bd),
+                'errores': len(errores_bne)
             },
             'resultados_bd_local': [
-                {
-                    **obra.to_dict_detallado(),  # Incluye datos especializados
-                    'fuente': 'BD local',
-                    'nuevo': False
-                }
+                {**obra.to_dict_detallado(), 'fuente': 'BD local'}
                 for obra in resultados_bd
             ],
-            'resultados_bne': [
-                {
-                    'id': obra.get('id', ''),
-                    'titulo': obra.get('titulo', ''),
-                    'tipo_publicacion': obra.get('tipo_publicacion', ''),
-                    'autor_firma': obra.get('autor_firma', ''),
-                    'nombre_autor': obra.get('nombre_autor', ''),
-                    'anio': obra.get('anio', ''),
-                    'fecha': obra.get('fecha', ''),
-                    'variante_titulo': obra.get('variante_titulo', ''),
-                    'pseudonimos_autor': obra.get('pseudonimos_autor', ''),
-                    'tema_principal': obra.get('tema_principal', ''),
-                    'paginas': obra.get('paginas', ''),
-                    'imprenta': obra.get('imprenta', ''),
-                    'lugar_impresion': obra.get('lugar_impresion', ''),
-                    'como_citar': obra.get('como_citar', ''),
-                    'num_periodico': obra.get('num_periodico', ''),
-                    'descripcion': obra.get('descripcion', ''),
-                    'enlace': obra.get('enlace', ''),
-                    'fuente': 'datos.bne.es',
-                    'nuevo': True  # Marca para saber que es nuevo de BNE
-                }
-                for obra in obras_bne
-            ],
-            'mensaje': f'✅ Búsqueda completada: {len(resultados_bd)} obras en BD local + {len(obras_bne)} en datos.bne.es'
-        }
-        
-        return jsonify(result_data), 200
-    
+            'guardadas': guardadas,
+            'ya_en_bd': ya_en_bd,
+            'errores_bne': errores_bne,
+            'mensaje': f'✅ {len(resultados_bd)} en BD local · {len(guardadas)} nuevas guardadas · {len(ya_en_bd)} ya existían en BNE'
+        }), 200
+
     except Exception as e:
         logger.error(f"❌ Error en /api/importar/nombre: {e}")
         return jsonify({'error': str(e)}), 500
