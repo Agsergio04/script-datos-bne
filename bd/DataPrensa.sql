@@ -4,12 +4,12 @@
 CREATE TABLE usuario (
     id_usuario BIGSERIAL PRIMARY KEY,
     nombre VARCHAR(200) NOT NULL
-);
+); --Crear roles apara asignarlos a los usuarios para tener diferntes permisos
 
 CREATE TABLE laboratorio (
     id_laboratorio BIGSERIAL PRIMARY KEY,
     nombre VARCHAR(200) NOT NULL
-);
+); --Eliminar tabla
 
 CREATE TABLE proyectos (
     id_proyecto BIGSERIAL PRIMARY KEY,
