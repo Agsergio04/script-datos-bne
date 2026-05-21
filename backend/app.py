@@ -36,6 +36,57 @@ logger = logging.getLogger(__name__)
 # MODELOS
 # ============================================================
 
+class Autor(db.Model):
+    __tablename__ = 'autor'
+
+    id_autor = db.Column(db.BigInteger, primary_key=True)
+    nombre_completo = db.Column(db.String(255), nullable=False)
+    nombre_firma = db.Column(db.String(255))
+    pseudonimos = db.Column(db.Text)
+    fecha_nacimiento = db.Column(db.String(100))
+    anio_nacimiento = db.Column(db.Integer)
+    lugar_nacimiento = db.Column(db.String(255))
+    fecha_muerte = db.Column(db.String(100))
+    anio_muerte = db.Column(db.Integer)
+    lugar_muerte = db.Column(db.String(255))
+    nacionalidad = db.Column(db.String(100))
+    ocupacion = db.Column(db.String(255))
+    genero = db.Column(db.String(50))
+    lengua = db.Column(db.String(100))
+    biografia = db.Column(db.Text)
+    bne_identificador = db.Column(db.String(100), unique=True)
+    url_datos_bne = db.Column(db.Text)
+    viaf_id = db.Column(db.String(100))
+    otros_identificadores = db.Column(db.Text)
+    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+    actualizado_en = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id_autor,
+            'nombre_completo': self.nombre_completo,
+            'nombre_firma': self.nombre_firma,
+            'pseudonimos': self.pseudonimos,
+            'fecha_nacimiento': self.fecha_nacimiento,
+            'anio_nacimiento': self.anio_nacimiento,
+            'lugar_nacimiento': self.lugar_nacimiento,
+            'fecha_muerte': self.fecha_muerte,
+            'anio_muerte': self.anio_muerte,
+            'lugar_muerte': self.lugar_muerte,
+            'nacionalidad': self.nacionalidad,
+            'ocupacion': self.ocupacion,
+            'genero': self.genero,
+            'lengua': self.lengua,
+            'biografia': self.biografia,
+            'bne_identificador': self.bne_identificador,
+            'url_datos_bne': self.url_datos_bne,
+            'viaf_id': self.viaf_id,
+            'otros_identificadores': self.otros_identificadores,
+            'fecha_creacion': self.fecha_creacion.isoformat() if self.fecha_creacion else None,
+            'actualizado_en': self.actualizado_en.isoformat() if self.actualizado_en else None
+        }
+
+
 class Usuario(db.Model):
     __tablename__ = 'usuario'
     
@@ -63,6 +114,7 @@ class Obra(db.Model):
     tipo_publicacion = db.Column(db.String(100))
     autor_firma = db.Column(db.String(255))
     nombre_autor = db.Column(db.String(255))
+    id_autor = db.Column(db.BigInteger, db.ForeignKey('autor.id_autor'), nullable=True)
     anio = db.Column(db.Integer)
     enlace = db.Column(db.Text, unique=True)
     fecha = db.Column(db.Date)
@@ -86,6 +138,7 @@ class Obra(db.Model):
             'tipo_publicacion': self.tipo_publicacion,
             'autor_firma': self.autor_firma,
             'nombre_autor': self.nombre_autor,
+            'id_autor': self.id_autor,
             'anio': self.anio,
             'enlace': self.enlace,
             'fecha': self.fecha.isoformat() if self.fecha else None,
@@ -243,14 +296,16 @@ def get_info():
         usuarios_count = Usuario.query.count()
         obras_count = Obra.query.count()
         proyectos_count = Proyecto.query.count()
-        
+        autores_count = Autor.query.count()
+
         return jsonify({
             'proyecto': 'Recogida de datos BNE',
             'descripcion': 'Plataforma para recopilar datos de autores y periódicos de la Biblioteca Nacional de España',
             'estadisticas': {
                 'usuarios': usuarios_count,
                 'obras': obras_count,
-                'proyectos': proyectos_count
+                'proyectos': proyectos_count,
+                'autores': autores_count
             },
             'version': '1.0.0'
         }), 200
@@ -1368,6 +1423,255 @@ def buscar_datasets_kaggle():
     
     except Exception as e:
         logger.error(f"❌ Error en POST /api/buscar-datasets/kaggle: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+# ============================================================
+# RUTAS - AUTORES
+# ============================================================
+
+@app.route('/api/autores', methods=['GET'])
+def get_autores():
+    """Listar autores con paginación y filtros opcionales"""
+    try:
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        nombre = request.args.get('nombre')
+        nacionalidad = request.args.get('nacionalidad')
+        ocupacion = request.args.get('ocupacion')
+
+        query = Autor.query
+
+        if nombre:
+            query = query.filter(Autor.nombre_completo.ilike(f'%{nombre}%'))
+        if nacionalidad:
+            query = query.filter(Autor.nacionalidad.ilike(f'%{nacionalidad}%'))
+        if ocupacion:
+            query = query.filter(Autor.ocupacion.ilike(f'%{ocupacion}%'))
+
+        paginated = query.order_by(Autor.nombre_completo).paginate(
+            page=page, per_page=per_page, error_out=False
+        )
+
+        return jsonify({
+            'data': [a.to_dict() for a in paginated.items],
+            'pagination': {
+                'page': page,
+                'per_page': per_page,
+                'total': paginated.total,
+                'pages': paginated.pages
+            }
+        }), 200
+    except Exception as e:
+        logger.error(f"Error en GET /api/autores: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/autores/<int:autor_id>', methods=['GET'])
+def get_autor(autor_id):
+    """Obtener un autor por id, incluyendo sus obras"""
+    try:
+        autor = Autor.query.get(autor_id)
+        if not autor:
+            return jsonify({'error': 'Autor no encontrado'}), 404
+
+        datos = autor.to_dict()
+        obras = Obra.query.filter_by(id_autor=autor_id).all()
+        datos['obras'] = [{'id': o.id_obra, 'titulo': o.titulo, 'anio': o.anio,
+                           'tipo_publicacion': o.tipo_publicacion} for o in obras]
+        return jsonify(datos), 200
+    except Exception as e:
+        logger.error(f"Error en GET /api/autores/{autor_id}: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/autores', methods=['POST'])
+def create_autor():
+    """Crear un autor manualmente"""
+    try:
+        data = request.get_json()
+        if not data or not data.get('nombre_completo'):
+            return jsonify({'error': 'nombre_completo es obligatorio'}), 400
+
+        # Evitar duplicados por identificador BNE
+        bne_id = data.get('bne_identificador')
+        if bne_id and Autor.query.filter_by(bne_identificador=bne_id).first():
+            return jsonify({'error': f'Ya existe un autor con bne_identificador {bne_id}'}), 409
+
+        autor = Autor(
+            nombre_completo=data['nombre_completo'].strip(),
+            nombre_firma=data.get('nombre_firma'),
+            pseudonimos=data.get('pseudonimos'),
+            fecha_nacimiento=data.get('fecha_nacimiento'),
+            anio_nacimiento=data.get('anio_nacimiento'),
+            lugar_nacimiento=data.get('lugar_nacimiento'),
+            fecha_muerte=data.get('fecha_muerte'),
+            anio_muerte=data.get('anio_muerte'),
+            lugar_muerte=data.get('lugar_muerte'),
+            nacionalidad=data.get('nacionalidad'),
+            ocupacion=data.get('ocupacion'),
+            genero=data.get('genero'),
+            lengua=data.get('lengua'),
+            biografia=data.get('biografia'),
+            bne_identificador=bne_id,
+            url_datos_bne=data.get('url_datos_bne'),
+            viaf_id=data.get('viaf_id'),
+            otros_identificadores=data.get('otros_identificadores')
+        )
+        db.session.add(autor)
+        db.session.commit()
+        return jsonify(autor.to_dict()), 201
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en POST /api/autores: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/autores/<int:autor_id>', methods=['PUT'])
+def update_autor(autor_id):
+    """Actualizar datos de un autor"""
+    try:
+        autor = Autor.query.get(autor_id)
+        if not autor:
+            return jsonify({'error': 'Autor no encontrado'}), 404
+
+        data = request.get_json()
+        campos = [
+            'nombre_completo', 'nombre_firma', 'pseudonimos',
+            'fecha_nacimiento', 'anio_nacimiento', 'lugar_nacimiento',
+            'fecha_muerte', 'anio_muerte', 'lugar_muerte',
+            'nacionalidad', 'ocupacion', 'genero', 'lengua',
+            'biografia', 'bne_identificador', 'url_datos_bne',
+            'viaf_id', 'otros_identificadores'
+        ]
+        for campo in campos:
+            if campo in data:
+                setattr(autor, campo, data[campo])
+
+        db.session.commit()
+        return jsonify(autor.to_dict()), 200
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en PUT /api/autores/{autor_id}: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/autores/<int:autor_id>', methods=['DELETE'])
+def delete_autor(autor_id):
+    """Eliminar un autor (las obras quedan con id_autor = NULL)"""
+    try:
+        autor = Autor.query.get(autor_id)
+        if not autor:
+            return jsonify({'error': 'Autor no encontrado'}), 404
+
+        db.session.delete(autor)
+        db.session.commit()
+        return jsonify({'message': f'Autor {autor_id} eliminado'}), 200
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en DELETE /api/autores/{autor_id}: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/importar/autores', methods=['POST'])
+def importar_autores():
+    """
+    Busca un autor en datos.bne.es por nombre o URL y lo guarda en la BD de autores.
+
+    Body:
+      {"nombre": "García Lorca"}          → busca por nombre en datos.bne.es
+      {"url": "https://datos.bne.es/persona/XX4556545.html"}  → extrae directamente
+    """
+    try:
+        data = request.get_json()
+        nombre = data.get('nombre', '').strip()
+        url = data.get('url', '').strip()
+
+        if not nombre and not url:
+            return jsonify({'error': 'Se requiere nombre o url'}), 400
+
+        resultados = {'importados': [], 'existentes': [], 'errores': []}
+
+        autores_datos = []
+
+        if url:
+            # Extracción directa desde una URL de persona BNE
+            logger.info(f"Extrayendo autor desde URL: {url}")
+            datos = scraper.extraer_datos_autor_html(url)
+            if datos:
+                autores_datos.append(datos)
+            else:
+                return jsonify({'error': 'No se pudieron extraer datos del autor desde la URL'}), 422
+        else:
+            # Búsqueda por nombre
+            logger.info(f"Buscando autor por nombre: {nombre}")
+            autores_datos = scraper.buscar_autores_bne(nombre)
+
+        for datos_autor in autores_datos:
+            try:
+                bne_id = datos_autor.get('bne_identificador')
+
+                # Comprobar si ya existe
+                existente = None
+                if bne_id:
+                    existente = Autor.query.filter_by(bne_identificador=bne_id).first()
+                if not existente:
+                    nombre_bne = datos_autor.get('nombre_completo', '')
+                    if nombre_bne:
+                        existente = Autor.query.filter_by(nombre_completo=nombre_bne).first()
+
+                if existente:
+                    resultados['existentes'].append({'id': existente.id_autor,
+                                                     'nombre': existente.nombre_completo})
+                    continue
+
+                nuevo = Autor(
+                    nombre_completo=datos_autor.get('nombre_completo', nombre or 'Desconocido'),
+                    nombre_firma=datos_autor.get('nombre_firma'),
+                    pseudonimos=datos_autor.get('pseudonimos'),
+                    fecha_nacimiento=datos_autor.get('fecha_nacimiento'),
+                    anio_nacimiento=datos_autor.get('anio_nacimiento'),
+                    lugar_nacimiento=datos_autor.get('lugar_nacimiento'),
+                    fecha_muerte=datos_autor.get('fecha_muerte'),
+                    anio_muerte=datos_autor.get('anio_muerte'),
+                    lugar_muerte=datos_autor.get('lugar_muerte'),
+                    nacionalidad=datos_autor.get('nacionalidad'),
+                    ocupacion=datos_autor.get('ocupacion'),
+                    genero=datos_autor.get('genero'),
+                    lengua=datos_autor.get('lengua'),
+                    biografia=datos_autor.get('biografia'),
+                    bne_identificador=bne_id,
+                    url_datos_bne=datos_autor.get('url_datos_bne'),
+                    viaf_id=datos_autor.get('viaf_id'),
+                    otros_identificadores=datos_autor.get('otros_identificadores')
+                )
+                db.session.add(nuevo)
+                db.session.commit()
+                resultados['importados'].append({'id': nuevo.id_autor,
+                                                 'nombre': nuevo.nombre_completo})
+                logger.info(f"Autor importado: {nuevo.nombre_completo}")
+
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Error importando autor '{datos_autor.get('nombre_completo', '')}': {e}")
+                resultados['errores'].append({'nombre': datos_autor.get('nombre_completo', ''),
+                                              'error': str(e)})
+
+        return jsonify({
+            'mensaje': f"{len(resultados['importados'])} autores importados, "
+                       f"{len(resultados['existentes'])} ya existían, "
+                       f"{len(resultados['errores'])} errores",
+            'estadisticas': {
+                'importados': len(resultados['importados']),
+                'existentes': len(resultados['existentes']),
+                'errores': len(resultados['errores'])
+            },
+            'resultados': resultados
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error en POST /api/importar/autores: {e}")
         return jsonify({'error': str(e)}), 500
 
 

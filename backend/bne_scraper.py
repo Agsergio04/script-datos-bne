@@ -592,6 +592,220 @@ class BNEScraper:
             return None
     
     
+    def extraer_datos_autor_html(self, url: str) -> Optional[Dict]:
+        """
+        Extrae datos estructurados de una página de persona/autor de datos.bne.es
+        Ej: https://datos.bne.es/persona/XX4556545.html
+
+        Campos que intenta extraer (estructura de datos.bne.es para personas):
+          nombre_completo, nombre_firma, pseudonimos, fecha_nacimiento,
+          anio_nacimiento, lugar_nacimiento, fecha_muerte, anio_muerte,
+          lugar_muerte, nacionalidad, ocupacion, genero, lengua,
+          biografia, bne_identificador, url_datos_bne, viaf_id
+        """
+        try:
+            logger.info(f"Extrayendo datos de autor desde: {url}")
+
+            response = self.session.get(url, timeout=self.timeout, verify=self.verify_ssl)
+            response.raise_for_status()
+            response.encoding = 'utf-8'
+
+            soup = BeautifulSoup(response.content, 'html.parser')
+
+            datos_autor = {
+                'url_datos_bne': url,
+                'bne_identificador': None,
+                'nombre_completo': None,
+                'nombre_firma': None,
+                'pseudonimos': None,
+                'fecha_nacimiento': None,
+                'anio_nacimiento': None,
+                'lugar_nacimiento': None,
+                'fecha_muerte': None,
+                'anio_muerte': None,
+                'lugar_muerte': None,
+                'nacionalidad': None,
+                'ocupacion': None,
+                'genero': None,
+                'lengua': None,
+                'biografia': None,
+                'viaf_id': None,
+                'otros_identificadores': None
+            }
+
+            # Extraer identificador BNE desde la URL (ej: XX4556545)
+            match = re.search(r'/persona/([A-Za-z0-9]+)', url)
+            if match:
+                datos_autor['bne_identificador'] = match.group(1)
+
+            def _extraer_anio(texto: str) -> Optional[int]:
+                m = re.search(r'\b(\d{4})\b', texto)
+                return int(m.group(1)) if m else None
+
+            def _mapear_campo(label: str, value: str):
+                """Asigna value al campo correcto según la etiqueta de datos.bne.es"""
+                l = label.lower()
+                # Nombre
+                if ('nombre' in l and any(x in l for x in ['autorizado', 'personal', 'completo'])) \
+                        or l in ('nombre', 'nombre de la persona'):
+                    if not datos_autor['nombre_completo']:
+                        datos_autor['nombre_completo'] = value
+                elif 'firma' in l and 'nombre' in l:
+                    datos_autor['nombre_firma'] = value
+                elif any(x in l for x in ['pseudónimo', 'seudónimo', 'variante', 'otras formas']):
+                    datos_autor['pseudonimos'] = value
+                # Fechas
+                elif 'nacimiento' in l and 'fecha' in l:
+                    datos_autor['fecha_nacimiento'] = value
+                    datos_autor['anio_nacimiento'] = _extraer_anio(value)
+                elif 'muerte' in l and 'fecha' in l:
+                    datos_autor['fecha_muerte'] = value
+                    datos_autor['anio_muerte'] = _extraer_anio(value)
+                elif 'asociad' in l and 'fecha' in l:
+                    # "Fechas asociadas" → extrae primer año como nacimiento
+                    if not datos_autor['fecha_nacimiento']:
+                        datos_autor['fecha_nacimiento'] = value
+                        datos_autor['anio_nacimiento'] = _extraer_anio(value)
+                # Lugares
+                elif 'nacimiento' in l and 'lugar' in l:
+                    datos_autor['lugar_nacimiento'] = value
+                elif 'muerte' in l and 'lugar' in l:
+                    datos_autor['lugar_muerte'] = value
+                # Otros campos
+                elif any(x in l for x in ['país', 'pais', 'nacional']):
+                    datos_autor['nacionalidad'] = value
+                elif any(x in l for x in ['ocupación', 'profesión', 'actividad', 'campo']):
+                    datos_autor['ocupacion'] = value
+                elif any(x in l for x in ['género', 'sexo']):
+                    datos_autor['genero'] = value
+                elif any(x in l for x in ['lengua', 'idioma', 'language']):
+                    datos_autor['lengua'] = value
+                elif any(x in l for x in ['biograf', 'nota biogr', 'resumen']):
+                    datos_autor['biografia'] = value
+                elif 'viaf' in l:
+                    datos_autor['viaf_id'] = value
+                elif any(x in l for x in ['identificador', 'isni', 'lccn']):
+                    datos_autor['otros_identificadores'] = value
+
+            # === MÉTODO 1: Tablas ===
+            for table in soup.find_all('table'):
+                for row in table.find_all('tr'):
+                    cols = row.find_all(['td', 'th'])
+                    if len(cols) >= 2:
+                        _mapear_campo(cols[0].get_text(strip=True), cols[1].get_text(strip=True))
+
+            # === MÉTODO 2: dl/dt/dd ===
+            if not datos_autor['nombre_completo']:
+                for dl in soup.find_all('dl'):
+                    for dt, dd in zip(dl.find_all('dt'), dl.find_all('dd')):
+                        _mapear_campo(dt.get_text(strip=True), dd.get_text(strip=True))
+
+            # === MÉTODO 3: h1 como nombre ===
+            if not datos_autor['nombre_completo']:
+                h1 = soup.find('h1')
+                if h1:
+                    datos_autor['nombre_completo'] = h1.get_text(strip=True)
+
+            # === MÉTODO 4: meta tags ===
+            if not datos_autor['nombre_completo']:
+                for meta in soup.find_all('meta'):
+                    name = meta.get('name', '').lower()
+                    content = meta.get('content', '')
+                    if 'title' in name and content:
+                        datos_autor['nombre_completo'] = content
+                        break
+
+            # Limpiar Nones y vacíos
+            datos_autor = {k: v for k, v in datos_autor.items() if v is not None and v != ''}
+
+            logger.info(f"✓ Autor extraído: {datos_autor.get('nombre_completo', 'N/A')} "
+                        f"({datos_autor.get('bne_identificador', 'sin ID')})")
+            return datos_autor if datos_autor.get('nombre_completo') or datos_autor.get('bne_identificador') else None
+
+        except Exception as e:
+            logger.error(f"Error extrayendo datos de autor: {e}")
+            return None
+
+    def buscar_autores_bne(self, nombre: str, limite: int = 10) -> List[Dict]:
+        """
+        Busca personas/autores en datos.bne.es por nombre y devuelve su estructura completa.
+        Intenta varias URLs de búsqueda y, para cada resultado, extrae los datos
+        completos de la página de la persona.
+
+        Args:
+            nombre: Nombre del autor a buscar
+            limite: Número máximo de autores a devolver
+
+        Returns:
+            Lista de dicts con la estructura completa de cada autor
+        """
+        autores = []
+        try:
+            logger.info(f"Buscando autores en datos.bne.es: '{nombre}'")
+
+            # Intentar varias URLs de búsqueda del portal
+            search_urls = [
+                f"{self.base_url}/search?q={quote(nombre)}&type=persona",
+                f"{self.base_url}/search?q={quote(nombre)}",
+                f"{self.base_url}/?q={quote(nombre)}&type=person",
+                f"{self.base_url}/?q={quote(nombre)}",
+            ]
+
+            response = None
+            for url in search_urls:
+                try:
+                    resp = self.session.get(url, timeout=self.timeout, verify=self.verify_ssl)
+                    if resp.status_code == 200:
+                        response = resp
+                        logger.info(f"  ✓ Resultados de búsqueda desde: {url}")
+                        break
+                except Exception:
+                    continue
+
+            if not response:
+                logger.warning("No se encontró URL de búsqueda válida en datos.bne.es")
+                return autores
+
+            response.encoding = 'utf-8'
+            soup = BeautifulSoup(response.content, 'html.parser')
+
+            # Buscar enlaces a páginas de persona
+            persona_links = soup.find_all('a', href=re.compile(r'/persona/', re.IGNORECASE))
+
+            # Fallback: buscar cualquier enlace que pueda ser un identificador de persona
+            if not persona_links:
+                persona_links = soup.find_all('a', href=re.compile(r'/(XX|a)\d+', re.IGNORECASE))
+
+            logger.info(f"  Encontrados {len(persona_links)} enlaces a personas")
+
+            urls_vistas = set()
+            for link in persona_links[:limite * 2]:  # margen por si alguno falla
+                href = link.get('href', '')
+                url_persona = urljoin(self.base_url, href)
+
+                # Normalizar a .html
+                if not url_persona.endswith('.html'):
+                    url_persona = url_persona.rstrip('/') + '.html'
+
+                if url_persona in urls_vistas:
+                    continue
+                urls_vistas.add(url_persona)
+
+                datos = self.extraer_datos_autor_html(url_persona)
+                if datos:
+                    autores.append(datos)
+                    if len(autores) >= limite:
+                        break
+
+                time.sleep(0.5)  # cortesía al servidor
+
+            logger.info(f"✓ {len(autores)} autores obtenidos desde datos.bne.es")
+
+        except Exception as e:
+            logger.error(f"Error en buscar_autores_bne: {e}")
+
+        return autores
+
     def guardar_csv(self, datos: List[Dict], nombre_archivo: str) -> bool:
         """
         Guarda datos en archivo CSV
