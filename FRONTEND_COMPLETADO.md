@@ -176,7 +176,7 @@ http://localhost:3000/?url=https://datos.bne.es/data/XX123456
 ✅ **Responsive Design**
 - Funciona en móvil, tablet, desktop
 
-✅ **Estilos Tailwind CSS**
+✅ **Estilos CSS con metodología BEM** (carpeta `src/styles/`, sin Tailwind)
 - Interfaz moderna y limpia
 
 ✅ **Animaciones Fluidas**
@@ -337,7 +337,7 @@ npm install
 
 - **datos.bne.es:** https://datos.bne.es
 - **React Docs:** https://react.dev
-- **Tailwind CSS:** https://tailwindcss.com
+- **BEM (Block Element Modifier):** https://getbem.com/
 - **URL Encoding:** https://www.urlencoder.org/
 
 ---
@@ -345,7 +345,7 @@ npm install
 ## 💡 Notas Técnicas
 
 - React 18 con Hooks
-- Tailwind CSS para estilo
+- CSS con metodología BEM (carpeta `src/styles/`)
 - Fetch API para llamadas HTTP
 - URLSearchParams para parámetros
 - Composición de componentes

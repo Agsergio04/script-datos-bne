@@ -1,0 +1,26 @@
+# Variables de entorno (contienen credenciales)
+.env
+.env.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+
+# Build / dependencias (el frontend tiene además su propio .gitignore)
+node_modules/
+/frontend/build/

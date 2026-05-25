@@ -58,6 +58,7 @@ class Autor(db.Model):
     url_datos_bne = db.Column(db.Text)
     viaf_id = db.Column(db.String(100))
     otros_identificadores = db.Column(db.Text)
+    imagen_url = db.Column(db.Text)
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
     actualizado_en = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -82,6 +83,7 @@ class Autor(db.Model):
             'url_datos_bne': self.url_datos_bne,
             'viaf_id': self.viaf_id,
             'otros_identificadores': self.otros_identificadores,
+            'imagen_url': self.imagen_url,
             'fecha_creacion': self.fecha_creacion.isoformat() if self.fecha_creacion else None,
             'actualizado_en': self.actualizado_en.isoformat() if self.actualizado_en else None
         }
@@ -128,6 +130,7 @@ class Obra(db.Model):
     como_citar = db.Column(db.Text)
     imprenta = db.Column(db.String(255))
     lugar_impresion = db.Column(db.String(255))
+    imagen_url = db.Column(db.Text)
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
     actualizado_en = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -152,6 +155,7 @@ class Obra(db.Model):
             'como_citar': self.como_citar,
             'imprenta': self.imprenta,
             'lugar_impresion': self.lugar_impresion,
+            'imagen_url': self.imagen_url,
             'fecha_creacion': self.fecha_creacion.isoformat() if self.fecha_creacion else None,
             'actualizado_en': self.actualizado_en.isoformat() if self.actualizado_en else None
         }
@@ -423,12 +427,13 @@ def create_obra():
             enlace=data.get('enlace'),
             tema_principal=data.get('tema_principal'),
             paginas=data.get('paginas'),
-            como_citar=data.get('como_citar')
+            como_citar=data.get('como_citar'),
+            imagen_url=data.get('imagen_url')
         )
-        
+
         db.session.add(nueva_obra)
         db.session.commit()
-        
+
         logger.info(f"Obra creada: {nueva_obra.id_obra}")
         return jsonify({
             'message': 'Obra creada exitosamente',
@@ -716,7 +721,8 @@ def importar_obra_url():
             paginas=obra_datos.get('descripcion_fisica'),
             como_citar=obra_datos.get('como_citar'),
             imprenta=obra_datos.get('editorial'),
-            lugar_impresion=obra_datos.get('lugar_publicacion')
+            lugar_impresion=obra_datos.get('lugar_publicacion'),
+            imagen_url=obra_datos.get('imagen_url')
         )
         
         db.session.add(nueva_obra)
@@ -834,7 +840,8 @@ def importar_obra_titulo():
                     paginas=obra_datos.get('paginas') or obra_datos.get('descripcion_fisica'),
                     como_citar=obra_datos.get('como_citar'),
                     imprenta=obra_datos.get('imprenta') or obra_datos.get('editorial'),
-                    lugar_impresion=obra_datos.get('lugar_impresion') or obra_datos.get('lugar_publicacion')
+                    lugar_impresion=obra_datos.get('lugar_impresion') or obra_datos.get('lugar_publicacion'),
+                    imagen_url=obra_datos.get('imagen_url')
                 )
 
                 db.session.add(nueva_obra)
@@ -962,7 +969,8 @@ def importar_por_nombre():
                     paginas=obra_datos.get('paginas') or obra_datos.get('descripcion_fisica'),
                     como_citar=obra_datos.get('como_citar'),
                     imprenta=obra_datos.get('imprenta') or obra_datos.get('editorial'),
-                    lugar_impresion=obra_datos.get('lugar_impresion') or obra_datos.get('lugar_publicacion')
+                    lugar_impresion=obra_datos.get('lugar_impresion') or obra_datos.get('lugar_publicacion'),
+                    imagen_url=obra_datos.get('imagen_url')
                 )
                 db.session.add(nueva_obra)
                 db.session.commit()
@@ -1130,7 +1138,8 @@ def importar_obras_lote():
                     paginas=obra_datos.get('descripcion_fisica') or obra_datos.get('paginas'),
                     como_citar=obra_datos.get('como_citar'),
                     imprenta=obra_datos.get('editorial') or obra_datos.get('imprenta'),
-                    lugar_impresion=obra_datos.get('lugar_publicacion')
+                    lugar_impresion=obra_datos.get('lugar_publicacion'),
+                    imagen_url=obra_datos.get('imagen_url')
                 )
                 
                 db.session.add(nueva_obra)
@@ -1235,7 +1244,8 @@ def importar_edicion_html():
             enlace=url,
             tema_principal=datos_edicion.get('forma_contenido'),
             paginas=datos_edicion.get('descripcion_fisica'),
-            como_citar=None
+            como_citar=None,
+            imagen_url=datos_edicion.get('imagen_url')
         )
         
         db.session.add(nueva_obra)
@@ -1516,7 +1526,8 @@ def create_autor():
             bne_identificador=bne_id,
             url_datos_bne=data.get('url_datos_bne'),
             viaf_id=data.get('viaf_id'),
-            otros_identificadores=data.get('otros_identificadores')
+            otros_identificadores=data.get('otros_identificadores'),
+            imagen_url=data.get('imagen_url')
         )
         db.session.add(autor)
         db.session.commit()
@@ -1542,7 +1553,7 @@ def update_autor(autor_id):
             'fecha_muerte', 'anio_muerte', 'lugar_muerte',
             'nacionalidad', 'ocupacion', 'genero', 'lengua',
             'biografia', 'bne_identificador', 'url_datos_bne',
-            'viaf_id', 'otros_identificadores'
+            'viaf_id', 'otros_identificadores', 'imagen_url'
         ]
         for campo in campos:
             if campo in data:
@@ -1643,7 +1654,8 @@ def importar_autores():
                     bne_identificador=bne_id,
                     url_datos_bne=datos_autor.get('url_datos_bne'),
                     viaf_id=datos_autor.get('viaf_id'),
-                    otros_identificadores=datos_autor.get('otros_identificadores')
+                    otros_identificadores=datos_autor.get('otros_identificadores'),
+                    imagen_url=datos_autor.get('imagen_url')
                 )
                 db.session.add(nuevo)
                 db.session.commit()

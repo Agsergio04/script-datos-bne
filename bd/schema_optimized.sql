@@ -27,6 +27,7 @@ CREATE TABLE autor (
     url_datos_bne TEXT,
     viaf_id VARCHAR(100),
     otros_identificadores TEXT,
+    imagen_url TEXT,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT check_nombre_autor_no_vacio CHECK (nombre_completo != '')
@@ -107,6 +108,7 @@ CREATE TABLE obra (
     imprenta VARCHAR(255),
     como_citar TEXT,
     lugar_impresion VARCHAR(255),
+    imagen_url TEXT,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_obra_autor

@@ -39,7 +39,7 @@ El proyecto "Recogida de datos de BNE" es una plataforma moderna basada en micro
 ### 1. Frontend (React)
 - **Localización:** `/frontend`
 - **Puerto:** 3000
-- **Tecnologías:** React 18+, TypeScript, Tailwind CSS, Recharts
+- **Tecnologías:** React 18, CSS con metodología BEM (carpeta `src/styles/`, sin Tailwind)
 - **Responsabilidades:**
   - Interfaz de usuario interactiva
   - Consumo de API REST

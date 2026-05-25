@@ -1,0 +1,128 @@
+/* ============================================================
+   Layout: app, cabecera, navegación, pie y contenedor de página
+   ============================================================ */
+
+/* Bloque: app (envoltorio raíz) */
+.app {
+    min-height: 100vh;
+    background-color: var(--color-stone-50);
+}
+
+.app__main {
+    display: block;
+}
+
+/* Bloque: site-header */
+.site-header {
+    background: linear-gradient(to bottom right,
+        var(--color-stone-800),
+        var(--color-stone-700),
+        var(--color-amber-900));
+}
+
+.site-header__inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.site-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.site-header__logo {
+    font-size: 3rem;
+    line-height: 1;
+    user-select: none;
+}
+
+.site-header__title {
+    font-family: var(--font-serif);
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--color-white);
+    letter-spacing: -0.025em;
+}
+
+.site-header__rule {
+    width: 4rem;
+    height: 1px;
+    background-color: var(--color-amber-400);
+    margin: 0.5rem 0;
+}
+
+.site-header__subtitle {
+    color: var(--color-stone-300);
+    font-size: 0.875rem;
+    letter-spacing: 0.025em;
+}
+
+/* Bloque: site-nav */
+.site-nav {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 1.5rem;
+}
+
+.site-nav__button {
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius) var(--radius) 0 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    color: var(--color-stone-300);
+    transition: all 0.2s ease;
+}
+
+.site-nav__button:hover {
+    color: var(--color-white);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.site-nav__button--active,
+.site-nav__button--active:hover {
+    background-color: var(--color-stone-50);
+    color: var(--color-stone-800);
+}
+
+/* Bloque: site-footer */
+.site-footer {
+    max-width: var(--container-max);
+    margin: 1rem auto 2rem;
+    padding: 1.5rem 1.5rem 0;
+    border-top: 1px solid var(--color-stone-200);
+    text-align: center;
+}
+
+.site-footer__text {
+    color: var(--color-stone-400);
+    font-size: 0.875rem;
+}
+
+.site-footer__link {
+    color: var(--color-amber-600);
+}
+
+.site-footer__link:hover {
+    color: var(--color-amber-800);
+    text-decoration: underline;
+}
+
+.site-footer__license {
+    color: var(--color-stone-300);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Bloque: page (contenedor común de cada página) */
+.page {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.page__section {
+    margin-bottom: 2rem;
+}

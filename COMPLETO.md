@@ -260,9 +260,9 @@ pytest==7.4.3
 ### Frontend
 ```
 react==18.2.0
-react-router-dom==6.20.0
-recharts==2.10.0
-tailwindcss==3.4.0
+react-dom==18.2.0
+react-scripts==5.0.1
+# Estilos: CSS con metodología BEM (sin Tailwind), carpeta src/styles/
 ```
 
 ### Base de Datos
@@ -399,7 +399,7 @@ curl "http://localhost:5000/api/obras?per_page=1000" > obras.json
 
 ### Tecnologías Utilizadas
 - Backend: Python + Flask + SQLAlchemy
-- Frontend: React + TypeScript + Tailwind
+- Frontend: React + CSS (metodología BEM)
 - BD: PostgreSQL + RDF/Linked Data
 - Streaming: Docker + Docker Compose
 - Scraping: Requests + BeautifulSoup

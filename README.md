@@ -233,13 +233,15 @@ GET  /api/estadisticas        - Estadísticas del repositorio
 
 ## 🎨 Frontend
 
-**Estado:** Por implementar
+**Estado:** Implementado (React 18)
 
-Tecnologías sugeridas:
-- React.js con TypeScript
-- Tailwind CSS para estilos
-- Recharts para visualizaciones
-- Axios para llamadas API
+Tecnologías:
+- React 18 (Create React App)
+- **CSS plano con metodología BEM** (carpeta `frontend/src/styles/`, sin Tailwind)
+- `fetch` para llamadas a la API
+- Tipografía serif Playfair Display (Google Fonts)
+
+Ver [`frontend/README.md`](frontend/README.md) para la guía de estilos BEM y los componentes.
 
 ## 🐳 Docker
 

@@ -1,0 +1,10 @@
+/* ============================================================
+   Punto de entrada de estilos (metodología BEM).
+   El orden importa: tokens → base → layout → componentes → páginas.
+   ============================================================ */
+
+@import './variables.css';
+@import './base.css';
+@import './layout.css';
+@import './components.css';
+@import './pages.css';

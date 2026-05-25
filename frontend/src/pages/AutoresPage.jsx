@@ -5,6 +5,7 @@ import EmptyState from '../components/EmptyState';
 import SectionHeader from '../components/SectionHeader';
 import BarChart from '../components/BarChart';
 import ImportResults from '../components/ImportResults';
+import ImagenPreview from '../components/ImagenPreview';
 
 export default function AutoresPage() {
     const [query, setQuery] = useState('');
@@ -20,6 +21,10 @@ export default function AutoresPage() {
     const [totalPaginas, setTotalPaginas] = useState(1);
     const [listLoading, setListLoading] = useState(true);
 
+    // Mapa nombre_completo (en minúsculas) → imagen_url, para mostrar el
+    // retrato del autor en la cabecera de cada grupo de obras.
+    const [autoresImg, setAutoresImg] = useState({});
+
     useEffect(() => {
         const cargarStats = async () => {
             try {
@@ -29,7 +34,21 @@ export default function AutoresPage() {
                 setStatsLoading(false);
             }
         };
+        const cargarAutoresImg = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/autores?per_page=500`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const mapa = {};
+                    (data.data || []).forEach(a => {
+                        if (a.imagen_url) mapa[(a.nombre_completo || '').toLowerCase()] = a.imagen_url;
+                    });
+                    setAutoresImg(mapa);
+                }
+            } catch { /* retratos son opcionales */ }
+        };
         cargarStats();
+        cargarAutoresImg();
         cargarObras(1);
     }, []);
 
@@ -77,117 +96,110 @@ export default function AutoresPage() {
         return acc;
     }, {});
 
-    const inputClass = "w-full px-4 py-3 border border-stone-200 rounded-lg bg-stone-50 text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors";
-
     return (
-        <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+        <div className="page">
 
-            {/* Stats cards */}
-            <div className="grid grid-cols-3 gap-4">
-                {statsLoading ? (
-                    <div className="col-span-3">
-                        <LoadingSpinner label="Cargando estadísticas..." />
-                    </div>
-                ) : stats ? (
-                    <>
-                        <div className="bg-white border border-stone-200 rounded-xl p-5 text-center shadow-sm">
-                            <p className="font-serif font-bold text-stone-800 text-4xl">
-                                {stats.resumen?.total_obras ?? '—'}
+            {/* Estadísticas */}
+            <section className="autores-page__section">
+                <div className="stats-grid">
+                    {statsLoading ? (
+                        <div className="stat-card stat-card--span">
+                            <LoadingSpinner label="Cargando estadísticas..." />
+                        </div>
+                    ) : stats ? (
+                        <>
+                            <div className="stat-card">
+                                <p className="stat-card__value">{stats.resumen?.total_obras ?? '—'}</p>
+                                <p className="stat-card__label">Total obras</p>
+                            </div>
+                            <div className="stat-card stat-card--blue">
+                                <p className="stat-card__value stat-card__value--blue">
+                                    {stats.resumen?.autores_principales?.length ?? '—'}
+                                </p>
+                                <p className="stat-card__label">Autores registrados</p>
+                            </div>
+                            <div className="stat-card stat-card--amber">
+                                <p className="stat-card__value stat-card__value--amber">
+                                    {stats.resumen?.obras_por_tipo?.length ?? '—'}
+                                </p>
+                                <p className="stat-card__label">Tipos de obra</p>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="stat-card stat-card--span">
+                            <p className="stat-card__message">
+                                Estadísticas no disponibles — asegúrate de que el backend está en marcha
                             </p>
-                            <p className="text-stone-400 text-xs tracking-widest uppercase mt-1">Total obras</p>
-                        </div>
-                        <div className="bg-white border border-blue-100 rounded-xl p-5 text-center shadow-sm">
-                            <p className="font-serif font-bold text-blue-700 text-4xl">
-                                {stats.resumen?.autores_principales?.length ?? '—'}
-                            </p>
-                            <p className="text-stone-400 text-xs tracking-widest uppercase mt-1">Autores registrados</p>
-                        </div>
-                        <div className="bg-white border border-amber-100 rounded-xl p-5 text-center shadow-sm">
-                            <p className="font-serif font-bold text-amber-700 text-4xl">
-                                {stats.resumen?.obras_por_tipo?.length ?? '—'}
-                            </p>
-                            <p className="text-stone-400 text-xs tracking-widest uppercase mt-1">Tipos de obra</p>
-                        </div>
-                    </>
-                ) : (
-                    <div className="col-span-3 text-center text-stone-400 text-sm py-4 bg-white border border-stone-200 rounded-xl">
-                        Estadísticas no disponibles — asegúrate de que el backend está en marcha
-                    </div>
-                )}
-            </div>
-
-            {/* Charts */}
-            {stats && (stats.resumen?.autores_principales?.length > 0 || stats.resumen?.obras_por_tipo?.length > 0) && (
-                <div className="grid grid-cols-2 gap-6">
-                    {stats.resumen?.autores_principales?.length > 0 && (
-                        <div className="bg-white border border-stone-200 rounded-xl p-5 shadow-sm">
-                            <SectionHeader color="blue" label="Autores principales" />
-                            <BarChart
-                                items={stats.resumen.autores_principales.slice(0, 7)}
-                                colorClass="bg-blue-500"
-                            />
-                        </div>
-                    )}
-                    {stats.resumen?.obras_por_tipo?.length > 0 && (
-                        <div className="bg-white border border-stone-200 rounded-xl p-5 shadow-sm">
-                            <SectionHeader color="amber" label="Obras por tipo" />
-                            <BarChart
-                                items={stats.resumen.obras_por_tipo}
-                                colorClass="bg-amber-500"
-                                labelKey="tipo"
-                            />
                         </div>
                     )}
                 </div>
+            </section>
+
+            {/* Gráficas */}
+            {stats && (stats.resumen?.autores_principales?.length > 0 || stats.resumen?.obras_por_tipo?.length > 0) && (
+                <section className="autores-page__section">
+                    <div className="charts-grid">
+                        {stats.resumen?.autores_principales?.length > 0 && (
+                            <div className="panel">
+                                <SectionHeader color="blue" label="Autores principales" />
+                                <BarChart items={stats.resumen.autores_principales.slice(0, 7)} color="blue" />
+                            </div>
+                        )}
+                        {stats.resumen?.obras_por_tipo?.length > 0 && (
+                            <div className="panel">
+                                <SectionHeader color="amber" label="Obras por tipo" />
+                                <BarChart items={stats.resumen.obras_por_tipo} color="amber" labelKey="tipo" />
+                            </div>
+                        )}
+                    </div>
+                </section>
             )}
 
-            {/* Search */}
-            <div className="bg-white border border-stone-200 rounded-xl p-8 shadow-sm">
-                <h2 className="font-serif text-xl font-bold text-stone-800 mb-1">Buscar Autor en BNE</h2>
-                <p className="text-stone-500 text-sm mb-6">
-                    Busca en <strong className="text-stone-600">datos.bne.es</strong> y en tu base de datos local.
-                    Las obras encontradas se guardan automáticamente.
-                </p>
-                <div className="flex gap-3">
-                    <input
-                        type="text"
-                        value={query}
-                        onChange={e => setQuery(e.target.value)}
-                        onKeyPress={e => e.key === 'Enter' && buscarAutor()}
-                        placeholder="Ej: Cervantes, Quevedo, Lope de Vega..."
-                        className={inputClass}
-                    />
-                    <button
-                        onClick={buscarAutor}
-                        disabled={loading}
-                        className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-lg font-semibold tracking-wide transition-colors disabled:opacity-50 whitespace-nowrap"
-                    >
-                        {loading ? 'Buscando...' : '🔎 Buscar'}
-                    </button>
+            {/* Buscador */}
+            <section className="autores-page__section">
+                <div className="panel">
+                    <h2 className="panel__title">Buscar Autor en BNE</h2>
+                    <p className="panel__subtitle">
+                        Busca en <strong>datos.bne.es</strong> y en tu base de datos local.
+                        Las obras encontradas se guardan automáticamente.
+                    </p>
+                    <div className="search-box__row">
+                        <input
+                            type="text"
+                            value={query}
+                            onChange={e => setQuery(e.target.value)}
+                            onKeyPress={e => e.key === 'Enter' && buscarAutor()}
+                            placeholder="Ej: Cervantes, Quevedo, Lope de Vega..."
+                            className="form__input form__input--blue"
+                        />
+                        <button onClick={buscarAutor} disabled={loading} className="button button--blue">
+                            {loading ? 'Buscando...' : '🔎 Buscar'}
+                        </button>
+                    </div>
+                    {error && <p className="search-box__error">❌ {error}</p>}
                 </div>
-                {error && <p className="text-red-600 text-sm mt-3">❌ {error}</p>}
-            </div>
+            </section>
 
-            {/* Search results */}
+            {/* Resultados de la búsqueda */}
             {(resultado || loading) && (
-                <div>
-                    <h2 className="font-serif text-xl font-bold text-stone-800 mb-4 flex items-center gap-3">
-                        <span className="w-1 h-6 bg-blue-500 rounded-full" />
+                <section className="autores-page__section">
+                    <h2 className="results-heading">
+                        <span className="results-heading__bar results-heading__bar--blue" />
                         Resultados de la búsqueda
                     </h2>
                     <ImportResults resultado={resultado} loading={loading} error={null} />
-                </div>
+                </section>
             )}
 
-            {/* Obras grouped by author */}
-            <div>
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="font-serif text-xl font-bold text-stone-800 flex items-center gap-3">
-                        <span className="w-1 h-6 bg-stone-400 rounded-full" />
+            {/* Obras en la base de datos */}
+            <section className="autores-page__section">
+                <div className="list-header">
+                    <h2 className="results-heading">
+                        <span className="results-heading__bar" />
                         Obras en la Base de Datos
                     </h2>
                     {totalPaginas > 1 && (
-                        <span className="text-stone-400 text-sm">Página {paginaActual} / {totalPaginas}</span>
+                        <span className="results-heading__meta">Página {paginaActual} / {totalPaginas}</span>
                     )}
                 </div>
 
@@ -201,27 +213,26 @@ export default function AutoresPage() {
                     />
                 ) : (
                     <>
-                        <div className="space-y-4">
+                        <div>
                             {Object.entries(obrasPorAutor).map(([autor, obras]) => (
-                                <div key={autor} className="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-sm">
-                                    <div className="bg-stone-50 border-b border-stone-100 px-5 py-3 flex items-center gap-3">
-                                        <span className="text-stone-400">👤</span>
-                                        <span className="font-semibold text-stone-700">{autor}</span>
-                                        <span className="ml-auto text-xs bg-stone-200 text-stone-600 px-2 py-0.5 rounded-full">
+                                <div key={autor} className="obras-group">
+                                    <div className="obras-group__header">
+                                        <ImagenPreview src={autoresImg[autor.toLowerCase()]} alt={autor} size="sm" tipo="autor" />
+                                        <span className="obras-group__author">{autor}</span>
+                                        <span className="obras-group__count">
                                             {obras.length} obra{obras.length !== 1 ? 's' : ''}
                                         </span>
                                     </div>
                                     {obras.map((obra, idx) => (
-                                        <div key={idx} className={`flex items-center gap-3 px-5 py-3 text-sm ${idx < obras.length - 1 ? 'border-b border-stone-100' : ''}`}>
-                                            <span className="w-1.5 h-1.5 bg-blue-400 rounded-full flex-shrink-0" />
-                                            <span className="text-stone-800 flex-1">{obra.titulo}</span>
-                                            {obra.anio && <span className="text-stone-400 text-xs">{obra.anio}</span>}
-                                            <span className="text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">
-                                                {obra.tipo_publicacion || 'obra'}
-                                            </span>
+                                        <div key={idx} className="obras-group__item">
+                                            <ImagenPreview src={obra.imagen_url} alt={obra.titulo} size="sm" tipo="obra" />
+                                            <span className="obra-list__title">{obra.titulo}</span>
+                                            {obra.anio && <span className="obra-list__year">{obra.anio}</span>}
+                                            <span className="obra-list__type">{obra.tipo_publicacion || 'obra'}</span>
                                             {obra.enlace && (
-                                                <a href={obra.enlace} target="_blank" rel="noopener noreferrer"
-                                                    className="text-xs text-amber-600 hover:underline">BNE ↗</a>
+                                                <a href={obra.enlace} target="_blank" rel="noopener noreferrer" className="obra-list__link">
+                                                    BNE ↗
+                                                </a>
                                             )}
                                         </div>
                                     ))}
@@ -230,19 +241,19 @@ export default function AutoresPage() {
                         </div>
 
                         {totalPaginas > 1 && (
-                            <div className="flex justify-center gap-2 mt-6">
+                            <div className="pagination">
                                 <button
                                     onClick={() => cargarObras(paginaActual - 1)}
                                     disabled={paginaActual === 1}
-                                    className="px-4 py-2 rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-40 text-sm transition-colors"
+                                    className="pagination__button"
                                 >
                                     ← Anterior
                                 </button>
-                                <span className="px-4 py-2 text-stone-500 text-sm">{paginaActual} / {totalPaginas}</span>
+                                <span className="pagination__status">{paginaActual} / {totalPaginas}</span>
                                 <button
                                     onClick={() => cargarObras(paginaActual + 1)}
                                     disabled={paginaActual === totalPaginas}
-                                    className="px-4 py-2 rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-40 text-sm transition-colors"
+                                    className="pagination__button"
                                 >
                                     Siguiente →
                                 </button>
@@ -250,7 +261,7 @@ export default function AutoresPage() {
                         )}
                     </>
                 )}
-            </div>
+            </section>
         </div>
     );
 }

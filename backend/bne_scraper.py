@@ -19,7 +19,7 @@ import csv
 import logging
 from datetime import datetime
 from typing import Dict, List, Optional
-from urllib.parse import urljoin, quote
+from urllib.parse import urljoin, quote, urlencode
 import time
 from bs4 import BeautifulSoup
 import re
@@ -433,6 +433,56 @@ class BNEScraper:
         
         return obras
     
+    def _extraer_imagen_principal(self, soup: BeautifulSoup, base_url: str) -> Optional[str]:
+        """
+        Extrae la URL de la imagen principal de una página de datos.bne.es.
+
+        Estrategia (de más fiable a menos):
+          1. Meta Open Graph  <meta property="og:image">
+          2. Meta Twitter     <meta name="twitter:image">
+          3. Imágenes digitalizadas (BDH / portadas) dentro del contenido
+          4. Primer <img> relevante (descarta logos, iconos y pixeles)
+
+        Args:
+            soup: documento ya parseado con BeautifulSoup
+            base_url: URL de la página (para resolver rutas relativas)
+
+        Returns:
+            URL absoluta de la imagen o None
+        """
+        try:
+            # 1) Open Graph
+            og = soup.find('meta', property='og:image')
+            if og and og.get('content'):
+                return urljoin(base_url, og['content'].strip())
+
+            # 2) Twitter card
+            tw = soup.find('meta', attrs={'name': 'twitter:image'})
+            if tw and tw.get('content'):
+                return urljoin(base_url, tw['content'].strip())
+
+            # 3) Imagen digitalizada (BDH, portadas, miniaturas de la BNE)
+            patrones_buenos = re.compile(r'(bdh|portada|cover|cubierta|thumbnail|imagen|digital)', re.IGNORECASE)
+            for img in soup.find_all('img', src=True):
+                src = img['src'].strip()
+                if patrones_buenos.search(src) or patrones_buenos.search(img.get('alt', '')):
+                    return urljoin(base_url, src)
+
+            # 4) Primer <img> que no sea logo/icono/pixel de tracking
+            patrones_malos = re.compile(r'(logo|icon|sprite|blank|pixel|spacer|banner|header|footer|\.svg$)', re.IGNORECASE)
+            for img in soup.find_all('img', src=True):
+                src = img['src'].strip()
+                if not src or src.startswith('data:'):
+                    continue
+                if patrones_malos.search(src):
+                    continue
+                return urljoin(base_url, src)
+
+            return None
+        except Exception as e:
+            logger.warning(f"No se pudo extraer imagen de {base_url}: {e}")
+            return None
+
     def extraer_datos_edicion_html(self, url: str) -> Optional[Dict]:
         """
         Extrae datos estructurados de una página de edición de BNE en HTML
@@ -473,8 +523,12 @@ class BNEScraper:
                 'isbn': None,
                 'issn': None,
                 'imprint': None,
-                'other_authors': []
+                'other_authors': [],
+                'imagen_url': None
             }
+
+            # Extraer imagen (portada / digitalización) para previsualización
+            datos_edicion['imagen_url'] = self._extraer_imagen_principal(soup, url)
             
             # === MÉTODO 1: Buscar en TABLAS (Primary para BNE) ===
             tables = soup.find_all('table')
@@ -630,13 +684,17 @@ class BNEScraper:
                 'lengua': None,
                 'biografia': None,
                 'viaf_id': None,
-                'otros_identificadores': None
+                'otros_identificadores': None,
+                'imagen_url': None
             }
 
             # Extraer identificador BNE desde la URL (ej: XX4556545)
             match = re.search(r'/persona/([A-Za-z0-9]+)', url)
             if match:
                 datos_autor['bne_identificador'] = match.group(1)
+
+            # Extraer imagen (retrato) para previsualización
+            datos_autor['imagen_url'] = self._extraer_imagen_principal(soup, url)
 
             def _extraer_anio(texto: str) -> Optional[int]:
                 m = re.search(r'\b(\d{4})\b', texto)
@@ -942,14 +1000,15 @@ class BNEScraper:
         try:
             logger.info(f"🔍 Buscando obras por TÍTULO en datos.bne.es: '{titulo}'")
             
-            # Construcción de URL de búsqueda en datos.bne.es
-            # TODO: Probar con URL raíz (/search, /query, /resultados, etc.)
+            # Endpoint REAL de búsqueda de datos.bne.es: /find/resultados/
+            # El campo P3001 corresponde al título/término principal de búsqueda.
             search_urls = [
-                f"{self.base_url}/search?q={quote(titulo)}",  # Intenta con /search
-                f"{self.base_url}/query?q={quote(titulo)}",   # Intenta con /query
-                f"{self.base_url}/resultados?q={quote(titulo)}",  # Intenta con /resultados
-                f"{self.base_url}/?q={quote(titulo)}",  # Intenta con parámetro raíz
-                f"{self.base_url}/?p={quote(titulo)}",  # Intenta con parámetro 'p'
+                f"{self.base_url}/find/resultados/?" + urlencode({'P3001': titulo}),
+                f"{self.base_url}/find/resultados/?" + urlencode({'advanced': '1', 'P3001': titulo}),
+                f"{self.base_url}/find/resultados/?" + urlencode({'q': titulo}),
+                # Fallbacks heredados por si cambia la interfaz
+                f"{self.base_url}/search?q={quote(titulo)}",
+                f"{self.base_url}/?q={quote(titulo)}",
             ]
             
             response = None
@@ -1089,6 +1148,87 @@ class BNEScraper:
             logger.error(f"❌ Error buscando obras por título: {e}")
             return []
     
+    def buscar_prensa_bne(self, termino: str = "", limite: int = 20) -> List[Dict]:
+        """
+        Busca PRENSA Y REVISTAS en datos.bne.es usando el filtro avanzado real:
+        https://datos.bne.es/find/resultados/?advanced=1&resourceType=Prensa+y+revistas
+
+        Para cada resultado intenta extraer también la imagen (portada) navegando
+        a la página de la edición.
+
+        Args:
+            termino: Texto a buscar dentro de prensa/revistas (vacío = listar todo)
+            limite: Número máximo de resultados
+
+        Returns:
+            Lista de obras (prensa) con sus campos, incluida imagen_url cuando exista
+        """
+        obras = []
+        try:
+            params = {
+                'advanced': '1',
+                'resourceType': 'Prensa y revistas',
+            }
+            if termino:
+                params['P3001'] = termino  # campo de título/término principal
+
+            url = f"{self.base_url}/find/resultados/?{urlencode(params)}"
+            logger.info(f"📰 Buscando prensa y revistas en datos.bne.es: '{termino or 'todo'}'")
+            logger.info(f"  📡 {url}")
+
+            response = self.session.get(url, timeout=self.timeout, verify=self.verify_ssl)
+            response.raise_for_status()
+            response.encoding = 'utf-8'
+
+            soup = BeautifulSoup(response.content, 'html.parser')
+
+            # Enlaces a recursos/ediciones en la página de resultados
+            enlaces = soup.find_all('a', href=re.compile(r'/(edicion|resource|data)/', re.IGNORECASE))
+            logger.info(f"  🔎 {len(enlaces)} enlaces a recursos encontrados")
+
+            urls_vistas = set()
+            for enlace in enlaces:
+                if len(obras) >= limite:
+                    break
+                href = enlace.get('href', '')
+                url_recurso = urljoin(self.base_url, href)
+                if url_recurso in urls_vistas:
+                    continue
+                urls_vistas.add(url_recurso)
+
+                titulo_enlace = enlace.get_text(strip=True)
+                if not titulo_enlace or len(titulo_enlace) < 3:
+                    continue
+
+                obra = {
+                    'titulo': titulo_enlace,
+                    'enlace': url_recurso,
+                    'tipo_publicacion': 'Prensa y revistas',
+                    'tipo': 'Periódico',
+                    'fuente': 'datos.bne.es',
+                }
+
+                # Completar con datos + imagen desde la página de la edición
+                if '/edicion/' in url_recurso:
+                    try:
+                        detalle = self.extraer_datos_edicion_html(url_recurso)
+                        if detalle:
+                            obra.update(detalle)
+                            obra['tipo_publicacion'] = 'Prensa y revistas'
+                    except Exception as e:
+                        logger.warning(f"  ⚠️ No se pudo completar '{titulo_enlace}': {e}")
+                    time.sleep(0.4)
+
+                obras.append(obra)
+                logger.info(f"  ✓ {len(obras)}. {obra.get('titulo', '')[:60]}")
+
+            logger.info(f"📊 Prensa: {len(obras)} resultados desde datos.bne.es")
+
+        except Exception as e:
+            logger.error(f"❌ Error buscando prensa: {e}")
+
+        return obras
+
     def ejecutar_busqueda_completa(self, autores: List[str], periodicos: List[str]):
         """
         Ejecuta una busqueda completa de autores y periódicos en datos.bne.es

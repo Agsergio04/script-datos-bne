@@ -1,8 +1,12 @@
 services:
+
+  # ──────────────────────────────────────────
   # Base de datos PostgreSQL
+  # ──────────────────────────────────────────
   db:
     image: postgres:18-alpine
     container_name: bne_database
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-bne_db}
       POSTGRES_USER: ${POSTGRES_USER:-bne_user}
@@ -17,65 +21,89 @@ services:
     networks:
       - bne_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bne_user}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bne_user} -d ${POSTGRES_DB:-bne_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 15s
 
-  # Backend Flask/Python
+  # ──────────────────────────────────────────
+  # Backend Flask / Python
+  # ──────────────────────────────────────────
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
     container_name: bne_backend
+    restart: unless-stopped
     environment:
       FLASK_APP: app.py
       FLASK_ENV: ${FLASK_ENV:-development}
+      FLASK_DEBUG: "1"
       DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-bne_user}:${POSTGRES_PASSWORD:-bne_password_123}@db:5432/${POSTGRES_DB:-bne_db}
       SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
     ports:
       - "5000:5000"
     volumes:
-      - ./backend:/app
+      - ./backend:/app          # hot-reload en desarrollo
     depends_on:
       db:
         condition: service_healthy
     networks:
       - bne_network
+    healthcheck:
+      # Usa la stdlib de Python para no depender de curl/wget en el contenedor
+      test: ["CMD", "python", "-c",
+             "import urllib.request, sys; urllib.request.urlopen('http://localhost:5000/health') or sys.exit(1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     command: >
-      sh -c "python -m flask run --host=0.0.0.0"
+      sh -c "python -m flask run --host=0.0.0.0 --port=5000"
 
-  # Frontend (Node.js/React)
+  # ──────────────────────────────────────────
+  # Frontend React (build estático → nginx)
+  # ──────────────────────────────────────────
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        # REACT_APP_API_URL se "hornea" en el build; debe ser la URL
+        # que el navegador del host pueda resolver (localhost, no "backend")
+        REACT_APP_API_URL: ${REACT_APP_API_URL:-http://localhost:5000}
     container_name: bne_frontend
+    restart: unless-stopped
     ports:
       - "3000:3000"
-    environment:
-      REACT_APP_API_URL: http://backend:5000
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - bne_network
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
-      interval: 10s
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/health || exit 1"]
+      interval: 15s
       timeout: 5s
-      retries: 5
+      retries: 3
+      start_period: 10s
 
-  # pgAdmin para gestión de BD (opcional)
+  # ──────────────────────────────────────────
+  # pgAdmin — interfaz web para la BD (opcional)
+  # ──────────────────────────────────────────
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: bne_pgadmin
+    restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
     ports:
       - "5050:80"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - bne_network
     volumes:
