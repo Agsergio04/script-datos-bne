@@ -104,7 +104,7 @@ CREATE TABLE obra (
     variante_titulo VARCHAR(255),
     pseudonimos_autor VARCHAR(255),
     tema_principal VARCHAR(255),
-    paginas VARCHAR(50),
+    paginas VARCHAR(500),
     imprenta VARCHAR(255),
     como_citar TEXT,
     lugar_impresion VARCHAR(255),

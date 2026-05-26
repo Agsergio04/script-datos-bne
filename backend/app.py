@@ -681,9 +681,10 @@ def importar_obra_url():
         # 2. Determinar tipo de URL y extraer datos
         obra_datos = None
         
-        # Detectar si es URL de edición HTML
-        if '/edicion/' in url and url.endswith('.html'):
-            logger.info("Detectada URL de edición HTML")
+        # Cualquier página HTML de datos.bne.es (/edicion/, /obra/, /recurso/...)
+        # se procesa con el extractor HTML (tablas, h1, og:image).
+        if url.endswith('.html'):
+            logger.info("Detectada URL HTML de datos.bne.es")
             obra_datos = scraper.extraer_datos_edicion_html(url)
         else:
             # Intentar como URL RDF/datos
@@ -1081,9 +1082,9 @@ def importar_obras_lote():
                 # PASO 2: Si no existe en BD, buscar en datos.bne.es
                 if 'url' in item:
                     url = item['url'].strip()
-                    # Detectar tipo de URL
-                    if '/edicion/' in url and url.endswith('.html'):
-                        logger.info(f"[LOTE {i+1}] Detectada URL de edición HTML")
+                    # Cualquier página HTML de datos.bne.es usa el extractor HTML
+                    if url.endswith('.html'):
+                        logger.info(f"[LOTE {i+1}] Detectada URL HTML de datos.bne.es")
                         obra_datos = scraper.extraer_datos_edicion_html(url)
                     else:
                         logger.info(f"[LOTE {i+1}] Detectada URL de datos RDF")

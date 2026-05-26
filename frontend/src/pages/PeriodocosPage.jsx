@@ -49,12 +49,15 @@ export default function PeriodocosPage({ queryParams }) {
         if (queryParams.url && !resultado) importarURL();
         else if ((queryParams.titulo || queryParams.periodicode) && !resultado) importarTitulo();
         else if (queryParams.fechaDesde && queryParams.fechaHasta && !resultado) setActiveTab('rango-fechas');
+        // Solo debe re-ejecutarse cuando cambian los parámetros de la URL.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryParams]);
 
     useEffect(() => {
         if (queryParams.fechaDesde && queryParams.fechaHasta && !resultado && fechaDesde && fechaHasta) {
             buscarPorRangoFechas();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fechaDesde, fechaHasta, queryParams]);
 
     const importarURL = async () => {

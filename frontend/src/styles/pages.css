@@ -5,7 +5,8 @@
 /* ---------- Bloque: form ---------- */
 .form__group {
     margin-top: 1rem;
-    display: flexbox;
+    display: flex;
+    flex-direction: column;
 }
 
 .form__grid {

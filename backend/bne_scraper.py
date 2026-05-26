@@ -437,46 +437,57 @@ class BNEScraper:
         """
         Extrae la URL de la imagen principal de una página de datos.bne.es.
 
-        Estrategia (de más fiable a menos):
-          1. Meta Open Graph  <meta property="og:image">
-          2. Meta Twitter     <meta name="twitter:image">
-          3. Imágenes digitalizadas (BDH / portadas) dentro del contenido
-          4. Primer <img> relevante (descarta logos, iconos y pixeles)
-
-        Args:
-            soup: documento ya parseado con BeautifulSoup
-            base_url: URL de la página (para resolver rutas relativas)
-
-        Returns:
-            URL absoluta de la imagen o None
+        Prioridad:
+          1. Imagen digitalizada (BDH / portada real de la obra)
+          2. og:image / twitter:image (descartando el logo de marca del sitio)
+          3. Cualquier <img> relevante
+        Se descarta el chrome del sitio (logo, brand, iconos) y se exige que la
+        URL parezca una imagen real. Las imágenes de la BNE se normalizan a HTTPS.
         """
+        # Chrome/estáticos del sitio que NO son la portada:
+        # - el og:image de datos.bne.es es el logo de marca
+        # - los /img/ de la BNE (incl. bdh-rd.bne.es/img/sound.png) son iconos
+        chrome = re.compile(r'(/img/|brand|logo|icono?|sprite|blank|pixel|spacer|placeholder|favicon|sound)', re.IGNORECASE)
+        # La portada digitalizada real se sirve por low.raw / high.raw
+        digitalizada = re.compile(r'(low\.raw|high\.raw)', re.IGNORECASE)
+
+        def es_imagen_valida(u: str) -> bool:
+            if not u or not u.startswith('http') or len(u) < 16:
+                return False
+            if chrome.search(u):
+                return False
+            return bool(
+                digitalizada.search(u)
+                or re.search(r'\.(jpe?g|png|gif|webp|bmp|tiff?)(\?|$)', u, re.IGNORECASE)
+            )
+
         try:
-            # 1) Open Graph
+            prioritarios = []  # portada digitalizada real (low.raw / high.raw)
+            secundarios = []   # og:image, twitter, otras imágenes
+
+            for img in soup.find_all('img', src=True):
+                src = img['src'].strip()
+                if digitalizada.search(src):
+                    prioritarios.append(urljoin(base_url, src))
+
             og = soup.find('meta', property='og:image')
             if og and og.get('content'):
-                return urljoin(base_url, og['content'].strip())
-
-            # 2) Twitter card
+                secundarios.append(urljoin(base_url, og['content'].strip()))
             tw = soup.find('meta', attrs={'name': 'twitter:image'})
             if tw and tw.get('content'):
-                return urljoin(base_url, tw['content'].strip())
+                secundarios.append(urljoin(base_url, tw['content'].strip()))
 
-            # 3) Imagen digitalizada (BDH, portadas, miniaturas de la BNE)
-            patrones_buenos = re.compile(r'(bdh|portada|cover|cubierta|thumbnail|imagen|digital)', re.IGNORECASE)
             for img in soup.find_all('img', src=True):
                 src = img['src'].strip()
-                if patrones_buenos.search(src) or patrones_buenos.search(img.get('alt', '')):
-                    return urljoin(base_url, src)
+                if src and not src.startswith('data:'):
+                    secundarios.append(urljoin(base_url, src))
 
-            # 4) Primer <img> que no sea logo/icono/pixel de tracking
-            patrones_malos = re.compile(r'(logo|icon|sprite|blank|pixel|spacer|banner|header|footer|\.svg$)', re.IGNORECASE)
-            for img in soup.find_all('img', src=True):
-                src = img['src'].strip()
-                if not src or src.startswith('data:'):
-                    continue
-                if patrones_malos.search(src):
-                    continue
-                return urljoin(base_url, src)
+            # Primer candidato válido (prioridad a la portada), normalizado a HTTPS
+            for c in prioritarios + secundarios:
+                if es_imagen_valida(c):
+                    if c.startswith('http://') and 'bne.es' in c:
+                        c = 'https://' + c[len('http://'):]
+                    return c
 
             return None
         except Exception as e:
@@ -617,16 +628,18 @@ class BNEScraper:
                             datos_edicion['titulo'] = text
                             break
             
-            # === MÉTODO 4: Buscar en meta tags ===
-            for meta in soup.find_all('meta'):
-                name = meta.get('name', '').lower()
-                content = meta.get('content', '')
-                
-                if 'title' in name or 'description' in name:
-                    if not datos_edicion['titulo'] and 'title' in name:
+            # === MÉTODO 4: meta tags (solo como último recurso para el título) ===
+            # No usamos la meta "description": en datos.bne.es es el lema genérico
+            # del portal ("El portal de datos de la Biblioteca Nacional...") y
+            # contaminaría el campo de descripción física.
+            if not datos_edicion['titulo']:
+                for meta in soup.find_all('meta'):
+                    name = meta.get('name', '').lower()
+                    prop = meta.get('property', '').lower()
+                    content = (meta.get('content') or '').strip()
+                    if content and ('title' in name or prop == 'og:title'):
                         datos_edicion['titulo'] = content
-                    elif 'description' in name and not datos_edicion['descripcion_fisica']:
-                        datos_edicion['descripcion_fisica'] = content
+                        break
             
             # Limpiar datos
             datos_edicion = {k: v for k, v in datos_edicion.items() 
