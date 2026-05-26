@@ -13,8 +13,8 @@ export default function ImportResults({ resultado, loading, error }) {
     );
 
     if (error) return (
-        <div className="import-card import-card--info" style={{ borderLeftColor: 'var(--color-red-400)' }}>
-            <p className="obra-list__error">❌ {error}</p>
+        <div className="import-card import-card--info" role="alert">
+            <p className="obra-list__error"><strong>Error:</strong> {error}</p>
         </div>
     );
 
@@ -36,7 +36,7 @@ export default function ImportResults({ resultado, loading, error }) {
             <div className="stack">
                 <div className="import-banner">
                     <p className="import-banner__text">
-                        🔎 Búsqueda: "<strong>{nombre_buscado}</strong>" —{' '}
+                        Búsqueda: "<strong>{nombre_buscado}</strong>" —{' '}
                         <strong>{total_encontrados}</strong> resultados encontrados
                     </p>
                     {resultado.mensaje && <p className="import-banner__message">{resultado.mensaje}</p>}
@@ -63,7 +63,7 @@ export default function ImportResults({ resultado, loading, error }) {
                     <div>
                         <SectionHeader color="stone" label="Base de Datos Local" count={resultados_bd.length} />
                         <div className="stack--sm">
-                            {resultados_bd.map((obra, idx) => <ObraDetalleCard key={idx} obra={obra} fuente="📍 BD Local" />)}
+                            {resultados_bd.map((obra, idx) => <ObraDetalleCard key={idx} obra={obra} fuente="BD Local" />)}
                         </div>
                     </div>
                 )}
@@ -100,7 +100,6 @@ export default function ImportResults({ resultado, loading, error }) {
 
                 {total_encontrados === 0 && (
                     <EmptyState
-                        icon="🔍"
                         title={`Sin resultados para "${nombre_buscado}"`}
                         description="Prueba con otro término o revisa la ortografía"
                     />
@@ -115,35 +114,34 @@ export default function ImportResults({ resultado, loading, error }) {
         const fuente = resultado.fuente;
         const esNueva = resultado.message.includes('importada') && !resultado.message.includes('existe');
 
-        let cardModifier, sourceModifier, icon;
+        let cardModifier, sourceModifier;
         if (esNueva) {
-            cardModifier = 'import-card--new'; sourceModifier = 'import-card__source--new'; icon = '✅';
+            cardModifier = 'import-card--new'; sourceModifier = 'import-card__source--new';
         } else if (fuente === 'BD local') {
-            cardModifier = 'import-card--local'; sourceModifier = 'import-card__source--local'; icon = '📚';
+            cardModifier = 'import-card--local'; sourceModifier = 'import-card__source--local';
         } else {
-            cardModifier = 'import-card--info'; sourceModifier = ''; icon = 'ℹ️';
+            cardModifier = 'import-card--info'; sourceModifier = '';
         }
 
         return (
             <div className={`import-card ${cardModifier}`}>
                 <div className="import-card__body">
-                    <span className="import-card__icon">{icon}</span>
                     <div className="import-card__content">
                         <p className="import-card__title">{resultado.message}</p>
                         {fuente && (
-                            <span className={`import-card__source ${sourceModifier}`}>📍 {fuente}</span>
+                            <span className={`import-card__source ${sourceModifier}`}>{fuente}</span>
                         )}
                         <div className="import-card__grid">
-                            <div><FieldLabel icon="📖" text="Título" /><p className="field-value">{obra.titulo}</p></div>
-                            <div><FieldLabel icon="✍️" text="Autor"  /><p className="field-value">{obra.nombre_autor || 'N/A'}</p></div>
-                            <div><FieldLabel icon="📅" text="Año"    /><p className="field-value">{obra.anio || 'N/A'}</p></div>
-                            <div><FieldLabel icon="🏷️" text="Tipo"  /><p className="field-value">{obra.tipo_publicacion || 'N/A'}</p></div>
-                            <div><FieldLabel icon="🆔" text="ID"     /><p className="field-value">{obra.id}</p></div>
+                            <div><FieldLabel text="Título" /><p className="field-value">{obra.titulo}</p></div>
+                            <div><FieldLabel text="Autor"  /><p className="field-value">{obra.nombre_autor || 'N/A'}</p></div>
+                            <div><FieldLabel text="Año"    /><p className="field-value">{obra.anio || 'N/A'}</p></div>
+                            <div><FieldLabel text="Tipo"   /><p className="field-value">{obra.tipo_publicacion || 'N/A'}</p></div>
+                            <div><FieldLabel text="ID"     /><p className="field-value">{obra.id}</p></div>
                             {obra.enlace && (
                                 <div>
-                                    <FieldLabel icon="🔗" text="Enlace" />
+                                    <FieldLabel text="Enlace" />
                                     <a href={obra.enlace} target="_blank" rel="noopener noreferrer" className="import-card__link">
-                                        Ver en datos.bne.es ↗
+                                        Ver en datos.bne.es
                                     </a>
                                 </div>
                             )}
@@ -190,7 +188,7 @@ export default function ImportResults({ resultado, loading, error }) {
                                     <span className="obra-list__dot obra-list__dot--emerald" />
                                     <span className="obra-list__title obra-list__title--medium">{obra.titulo}</span>
                                     <span className="obra-list__id">ID: {obra.id}</span>
-                                    <span className="obra-list__source">📥 {obra.fuente || 'datos.bne.es'}</span>
+                                    <span className="obra-list__source">{obra.fuente || 'datos.bne.es'}</span>
                                 </div>
                             ))}
                         </div>
@@ -205,7 +203,7 @@ export default function ImportResults({ resultado, loading, error }) {
                                 <div key={idx} className="obra-list__item">
                                     <span className="obra-list__dot obra-list__dot--amber" />
                                     <span className="obra-list__title">{obra.titulo}</span>
-                                    <span className="obra-list__source">📍 {obra.fuente || 'BD'}</span>
+                                    <span className="obra-list__source">{obra.fuente || 'BD'}</span>
                                 </div>
                             ))}
                         </div>

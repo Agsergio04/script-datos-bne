@@ -170,13 +170,14 @@ export default function AutoresPage() {
                             onChange={e => setQuery(e.target.value)}
                             onKeyPress={e => e.key === 'Enter' && buscarAutor()}
                             placeholder="Ej: Cervantes, Quevedo, Lope de Vega..."
+                            aria-label="Buscar autor en datos.bne.es"
                             className="form__input form__input--blue"
                         />
                         <button onClick={buscarAutor} disabled={loading} className="button button--blue">
-                            {loading ? 'Buscando...' : '🔎 Buscar'}
+                            {loading ? 'Buscando...' : 'Buscar'}
                         </button>
                     </div>
-                    {error && <p className="search-box__error">❌ {error}</p>}
+                    {error && <p className="search-box__error" role="alert"><strong>Error:</strong> {error}</p>}
                 </div>
             </section>
 
@@ -207,7 +208,6 @@ export default function AutoresPage() {
                     <LoadingSpinner label="Cargando obras..." />
                 ) : obrasLista.length === 0 ? (
                     <EmptyState
-                        icon="📭"
                         title="No hay obras registradas"
                         description="Usa el buscador de arriba para importar obras desde la BNE"
                     />
@@ -231,7 +231,7 @@ export default function AutoresPage() {
                                             <span className="obra-list__type">{obra.tipo_publicacion || 'obra'}</span>
                                             {obra.enlace && (
                                                 <a href={obra.enlace} target="_blank" rel="noopener noreferrer" className="obra-list__link">
-                                                    BNE ↗
+                                                    Ver en BNE
                                                 </a>
                                             )}
                                         </div>

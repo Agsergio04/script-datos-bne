@@ -1,7 +1,3 @@
-export default function FieldLabel({ icon, text }) {
-    return (
-        <p className="field-label">
-            {icon} {text}
-        </p>
-    );
+export default function FieldLabel({ text }) {
+    return <p className="field-label">{text}</p>;
 }

@@ -4,8 +4,8 @@ import AutoresPage from './pages/AutoresPage';
 import PeriodocosPage from './pages/PeriodocosPage';
 
 const PAGES = [
-    { id: 'periodicos', label: '📰 Periódicos' },
-    { id: 'autores',    label: '👤 Autores'    },
+    { id: 'periodicos', label: 'Periódicos' },
+    { id: 'autores',    label: 'Autores'    },
 ];
 
 export default function App() {
@@ -17,7 +17,7 @@ export default function App() {
             <header className="site-header">
                 <div className="site-header__inner">
                     <div className="site-header__brand">
-                        <div className="site-header__logo">📚</div>
+                        <div className="site-header__logo" aria-hidden="true">BNE</div>
                         <div>
                             <h1 className="site-header__title">Recogida de Datos BNE</h1>
                             <div className="site-header__rule" />
@@ -27,11 +27,12 @@ export default function App() {
                         </div>
                     </div>
 
-                    <nav className="site-nav">
+                    <nav className="site-nav" aria-label="Secciones">
                         {PAGES.map(({ id, label }) => (
                             <button
                                 key={id}
                                 onClick={() => setPage(id)}
+                                aria-current={page === id ? 'page' : undefined}
                                 className={`site-nav__button ${page === id ? 'site-nav__button--active' : ''}`}
                             >
                                 {label}

@@ -1,11 +1,11 @@
 import FieldLabel from './FieldLabel';
 import ImagenPreview from './ImagenPreview';
 
-function Campo({ icon, text, value }) {
+function Campo({ text, value }) {
     if (!value) return null;
     return (
         <div>
-            <FieldLabel icon={icon} text={text} />
+            <FieldLabel text={text} />
             <p className="field-value">{value}</p>
         </div>
     );
@@ -26,23 +26,23 @@ export default function ObraDetalleCard({ obra, fuente }) {
             </div>
 
             <div className="obra-card__grid">
-                <Campo icon="👤" text="Autor"    value={obra.nombre_autor} />
-                <Campo icon="✍️" text="Firma"    value={obra.autor_firma} />
-                <Campo icon="📅" text="Año"      value={obra.anio} />
-                <Campo icon="📆" text="Fecha"    value={obra.fecha} />
-                <Campo icon="🏷️" text="Tipo"    value={obra.tipo_publicacion} />
-                <Campo icon="🎯" text="Tema"     value={obra.tema_principal} />
-                <Campo icon="🖨️" text="Imprenta" value={obra.imprenta} />
-                <Campo icon="📍" text="Lugar"    value={obra.lugar_impresion} />
-                <Campo icon="📖" text="Páginas"  value={obra.paginas} />
-                <Campo icon="🌐" text="Idioma"   value={obra.idioma} />
-                <Campo icon="💾" text="Formato"  value={obra.formato} />
-                <Campo icon="⚖️" text="Derechos" value={obra.derechos} />
+                <Campo text="Autor"    value={obra.nombre_autor} />
+                <Campo text="Firma"    value={obra.autor_firma} />
+                <Campo text="Año"      value={obra.anio} />
+                <Campo text="Fecha"    value={obra.fecha} />
+                <Campo text="Tipo"     value={obra.tipo_publicacion} />
+                <Campo text="Tema"     value={obra.tema_principal} />
+                <Campo text="Imprenta" value={obra.imprenta} />
+                <Campo text="Lugar"    value={obra.lugar_impresion} />
+                <Campo text="Páginas"  value={obra.paginas} />
+                <Campo text="Idioma"   value={obra.idioma} />
+                <Campo text="Formato"  value={obra.formato} />
+                <Campo text="Derechos" value={obra.derechos} />
             </div>
 
             {obra.como_citar && (
                 <div className="obra-card__cite">
-                    <FieldLabel icon="📚" text="Cómo citar" />
+                    <FieldLabel text="Cómo citar" />
                     <p className="obra-card__cite-text">{obra.como_citar}</p>
                 </div>
             )}
@@ -50,7 +50,7 @@ export default function ObraDetalleCard({ obra, fuente }) {
             {obra.enlace && (
                 <div className="obra-card__footer">
                     <a href={obra.enlace} target="_blank" rel="noopener noreferrer" className="obra-card__link">
-                        🔗 Ver en BNE
+                        Ver en datos.bne.es
                     </a>
                 </div>
             )}

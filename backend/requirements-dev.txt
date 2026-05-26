@@ -1,0 +1,18 @@
+# Dependencias MÍNIMAS para ejecutar el backend en local y testear la API.
+#
+# Omite pandas/numpy/kaggle/flasgger/lxml/pytest: la API no los importa y
+# pandas/numpy con versión fijada fallan al compilar en algunas versiones de
+# Python (p. ej. 3.13, sin wheel precompilado).
+#
+# Sin versiones fijadas: pip elige wheels compatibles con tu intérprete.
+# Para reproducir el entorno exacto de producción usa requirements.txt con Python 3.11.
+#
+#   pip install -r requirements-dev.txt
+
+Flask
+Flask-CORS
+Flask-SQLAlchemy
+SQLAlchemy
+psycopg2-binary
+requests
+beautifulsoup4

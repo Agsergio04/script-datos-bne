@@ -8,7 +8,7 @@ export default function ListaObras({ obras, dotColor = '', showLink = false }) {
                     <span className="obra-list__id">ID: {obra.id}</span>
                     {showLink && obra.enlace && (
                         <a href={obra.enlace} target="_blank" rel="noopener noreferrer" className="obra-list__link">
-                            BNE ↗
+                            Ver en BNE
                         </a>
                     )}
                 </div>

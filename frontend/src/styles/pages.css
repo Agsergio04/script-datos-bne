@@ -3,8 +3,9 @@
    ============================================================ */
 
 /* ---------- Bloque: form ---------- */
-.form__group + .form__group {
+.form__group {
     margin-top: 1rem;
+    display: flexbox;
 }
 
 .form__grid {
@@ -27,7 +28,7 @@
 .form__textarea {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid var(--color-stone-200);
+    border: 1px solid var(--color-border-strong);
     border-radius: var(--radius);
     background-color: var(--color-stone-50);
     color: var(--color-stone-800);
@@ -41,23 +42,12 @@
     color: var(--color-stone-400);
 }
 
+/* Foco de alto contraste (verde oscuro 7.9:1) — visible para teclado */
 .form__input:focus,
 .form__textarea:focus {
-    outline: none;
-    border-color: var(--color-amber-400);
-    box-shadow: 0 0 0 2px var(--color-amber-400);
-}
-
-/* Modificador de foco azul (búsqueda de autores) */
-.form__input--blue:focus {
-    border-color: var(--color-blue-400);
-    box-shadow: 0 0 0 2px var(--color-blue-400);
-}
-
-/* Modificador de foco verde (buscar y guardar) */
-.form__input--emerald:focus {
-    border-color: var(--color-emerald-400);
-    box-shadow: 0 0 0 2px var(--color-emerald-400);
+    outline: 2px solid var(--color-accent-strong);
+    outline-offset: 1px;
+    border-color: var(--color-accent-strong);
 }
 
 .form__textarea {
@@ -141,9 +131,9 @@
 
 .tabs__tab--active,
 .tabs__tab--active:hover {
-    border-bottom-color: var(--color-amber-600);
-    color: var(--color-amber-700);
-    background-color: rgba(251, 191, 36, 0.08);
+    border-bottom-color: var(--color-accent-strong);
+    color: var(--color-accent-strong);
+    background-color: rgba(193, 211, 127, 0.22);
 }
 
 .tabs__icon {
