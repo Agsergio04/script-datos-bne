@@ -1,360 +1,194 @@
-# 🔙 Backend - Guía de Desarrollo
+# Backend — Guía de Desarrollo
 
-## Estructura del Backend
+API REST en Flask con estructura modular siguiendo principios **SOLID**.
+
+## Estructura
 
 ```
 backend/
-├── app.py                  # Aplicación Flask principal (API REST)
-├── bne_scraper.py          # Scraper para datos.bne.es
-├── scraper_config.ini      # Configuración del scraper
-├── Dockerfile              # Imagen Docker
-├── requirements.txt        # Dependencias Python
-└── tests/                  # Tests unitarios (futuro)
+├── app.py               Factory: crea la app y registra blueprints
+├── config.py            Configuración (Config)
+├── extensions.py        db = SQLAlchemy()  (sin app → evita imports circulares)
+├── bne_scraper.py       Cliente HTTP/scraper de datos.bne.es
+├── models/              Capa de datos (un archivo por entidad)
+│   ├── __init__.py      Reexporta los modelos (registra en SQLAlchemy)
+│   ├── autor.py         class Autor
+│   ├── obra.py          class Obra (+ to_dict_detallado)
+│   ├── usuario.py       class Usuario
+│   └── proyecto.py      class Proyecto
+├── services/            Lógica externa compartida
+│   └── scraper.py       Instancia única de BNEScraper
+├── blueprints/          Capa HTTP, agrupada por recurso (Single Responsibility)
+│   ├── health.py        /health, /api/version, /api/info
+│   ├── obras.py         CRUD de obras + /api/periodicos/rango-fechas
+│   ├── autores.py       CRUD de autores
+│   ├── importar.py      /api/importar/url|titulo|nombre|lote|edicion/html|autores
+│   ├── estadisticas.py  /api/estadisticas/resumen + /api/buscar
+│   └── datasets.py      /api/buscar-datasets/kaggle
+├── requirements.txt     Dependencias de producción
+├── requirements-dev.txt Mínimas para correr la API en local (sin pandas/numpy)
+└── Dockerfile
 ```
 
-## 🚀 Inicio Rápido
+### Decisiones SOLID
 
-### Opción 1: Con Docker
+| Principio | Aplicación |
+|---|---|
+| **Single Responsibility** | Config, extensiones, modelos, servicios y rutas, cada uno en su módulo. |
+| **Open/Closed** | Añadir un recurso = crear un blueprint y registrarlo en `app.py`, sin tocar el resto. |
+| **Dependency Inversion** | Los blueprints dependen de abstracciones (`extensions.db`, `services.scraper`), no de implementaciones concretas. |
+| **Interface Segregation** | Cada blueprint expone solo los endpoints de su recurso; el frontend solo importa lo que necesita. |
 
+## Arranque rápido
+
+### Con Docker (recomendado)
 ```bash
-# Desde la carpeta raíz del proyecto
-docker-compose up -d backend
-
-# Ver logs en vivo
-docker-compose logs -f backend
-
-# Acceder a la API
+docker compose up -d db backend
+docker compose logs -f backend
 curl http://localhost:5000/api/info
 ```
 
-### Opción 2: Desarrollo Local
-
+### En local (Python 3.11+ y BD en Docker)
 ```bash
-# 1. Crear entorno virtual
-python -m venv venv
-
-# 2. Activar (Windows)
-venv\Scripts\activate
-
-# 3. Instalar dependencias
-pip install -r backend/requirements.txt
-
-# 4. Configurar base de datos
-# Asegúrate de que PostgreSQL está corriendo
-
-# 5. Ejecutar aplicación
-python app.py
-
-# 6. Probar API
-curl http://localhost:5000/api/info
+docker compose up -d db                 # solo la BD
+cd backend
+python -m venv venv && venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt     # minimas; no compila pandas/numpy
+python app.py                           # ⇒ http://localhost:5000
 ```
 
----
+Por defecto `DATABASE_URL = postgresql+psycopg2://bne_user:bne_password_123@localhost:5432/bne_db`, que apunta a la BD que Docker expone en `localhost:5432`. Sobreescribe con `$env:DATABASE_URL = "..."` si hace falta.
 
-## 🌐 API REST Endpoints
+## Endpoints
 
-### Verificación
-
-```bash
-# Health check
-curl http://localhost:5000/health
-
-# Versión
-curl http://localhost:5000/api/version
-
-# Información del proyecto
-curl http://localhost:5000/api/info
+### Salud
+```http
+GET /health
+GET /api/version
+GET /api/info
 ```
 
-### Gestión de Obras
-
-```bash
-# Listar obras
-curl "http://localhost:5000/api/obras?page=1&per_page=10"
-
-# Filtrar por tipo
-curl "http://localhost:5000/api/obras?tipo=Novela"
-
-# Filtrar por autor
-curl "http://localhost:5000/api/obras?autor=Cervantes"
-
-# Obtener obra específica
-curl http://localhost:5000/api/obras/1
-
-# Crear nueva obra (POST)
-curl -X POST http://localhost:5000/api/obras \
-  -H "Content-Type: application/json" \
-  -d '{
-    "titulo": "Nueva Obra",
-    "tipo_publicacion": "Novela",
-    "nombre_autor": "Autor Nombre",
-    "anio": 2024
-  }'
-
-# Actualizar obra (PUT)
-curl -X PUT http://localhost:5000/api/obras/1 \
-  -H "Content-Type: application/json" \
-  -d '{"titulo": "Nuevo Título"}'
-
-# Eliminar obra (DELETE)
-curl -X DELETE http://localhost:5000/api/obras/1
+### Obras  ([blueprints/obras.py](blueprints/obras.py))
+```http
+GET    /api/obras?page=&per_page=&tipo=&autor=&tema=&anio=&fecha_desde=&fecha_hasta=
+GET    /api/obras/<id>
+GET    /api/obras/<id>/detallada
+POST   /api/obras
+PUT    /api/obras/<id>          # actualiza cualquier campo, incl. imagen_url (imagen manual)
+DELETE /api/obras/<id>
+GET    /api/periodicos/rango-fechas?fecha_desde=&fecha_hasta=
 ```
 
-### Estadísticas
-
-```bash
-# Resumen general
-curl http://localhost:5000/api/estadisticas/resumen
+### Autores  ([blueprints/autores.py](blueprints/autores.py))
+```http
+GET    /api/autores?page=&per_page=&nombre=&nacionalidad=&ocupacion=
+GET    /api/autores/<id>        # incluye sus obras
+POST   /api/autores
+PUT    /api/autores/<id>
+DELETE /api/autores/<id>
 ```
 
-### Búsqueda
-
-```bash
-# Búsqueda global (mínimo 3 caracteres)
-curl "http://localhost:5000/api/buscar?q=Quijote"
+### Importación  ([blueprints/importar.py](blueprints/importar.py))
+```http
+POST /api/importar/url          # {"url": "https://datos.bne.es/..."}   (.html → extractor HTML)
+POST /api/importar/titulo       # {"titulo": "Quijote"}
+POST /api/importar/nombre       # {"nombre": "Quijote", "limite": 20}
+POST /api/importar/lote         # {"obras": [{"url": "..."}, {"titulo": "..."}, ...]}
+POST /api/importar/edicion/html # {"url": "https://datos.bne.es/edicion/...html"}
+POST /api/importar/autores      # {"nombre": "..."}  ó  {"url": "https://datos.bne.es/persona/...html"}
 ```
 
----
-
-## 🔍 Scraper - Extracción de Datos
-
-### Ejecutar Scraper
-
-```bash
-# Desde la carpeta backend
-python bne_scraper.py
-
-# Genera archivos:
-# - bne_autores_YYYYMMDD_HHMMSS.json
-# - bne_autores_YYYYMMDD_HHMMSS.csv
-# - bne_periodicos_YYYYMMDD_HHMMSS.json
-# - bne_periodicos_YYYYMMDD_HHMMSS.csv
+### Estadísticas y búsqueda  ([blueprints/estadisticas.py](blueprints/estadisticas.py))
+```http
+GET /api/estadisticas/resumen   # {"resumen": {total_obras, autores_principales, obras_por_tipo}}
+GET /api/buscar?q=&detallada=
 ```
 
-### Script Personalizado
+### Kaggle  ([blueprints/datasets.py](blueprints/datasets.py))
+```http
+POST /api/buscar-datasets/kaggle
+```
 
+## Scraper (`bne_scraper.py`)
+
+Cliente HTTP de datos.bne.es. Métodos clave:
+
+- `extraer_datos_edicion_html(url)` — parsea cualquier página HTML de datos.bne.es (`/edicion/`, `/obra/`, `/resource/`) y extrae título, autor, editorial, lugar, fecha, **imagen** (portada digitalizada BDH validada y en HTTPS), etc.
+- `buscar_obras_por_titulo_bne(titulo, limit)` — busca obras por título en datos.bne.es.
+- `buscar_prensa_bne(termino, limite)` — usa el filtro real `find/resultados/?resourceType=Prensa+y+revistas`.
+- `extraer_datos_autor_html(url)` — parsea `/persona/...html`.
+- `buscar_autores_bne(nombre, limite)` — busca personas en datos.bne.es.
+
+### Estrategia de extracción de imagen
+
+`_extraer_imagen_principal` (helper interno):
+1. Prioriza la **portada digitalizada** (`low.raw`/`high.raw` del servidor BDH).
+2. Cae a `og:image` / `twitter:image` solo si parecen imágenes reales.
+3. Descarta el *chrome* del sitio (logo de marca, `/img/`, iconos, sprites).
+4. Normaliza http→https en hosts `bne.es` (evita *mixed-content*).
+5. Si no encuentra imagen válida, devuelve `None` → la UI muestra el placeholder.
+
+## Modelos
+
+Cada modelo en `models/<entidad>.py` con header:
 ```python
-#!/usr/bin/env python
-from bne_scraper import BNEScraper
+from datetime import datetime
+from extensions import db
 
-# Crear scraper
-scraper = BNEScraper()
-
-# Búsquedas personalizadas
-autores = ["García Lorca", "Machado"]
-periodicos = ["ABC", "La Vanguardia"]
-
-# Ejecutar
-scraper.ejecutar_busqueda_completa(autores, periodicos)
+class Mi(db.Model):
+    __tablename__ = 'mi'
+    ...
 ```
+Y reexportado en `models/__init__.py` para que `db.create_all()` los registre.
 
-### Integración con BD
+## Cómo añadir un endpoint o blueprint nuevo
 
-Los datos exportados por el scraper pueden importarse a la BD:
+1. Si el recurso ya existe, añade `@bp.route(...)` en el blueprint correspondiente.
+2. Si es nuevo, crea `blueprints/<recurso>.py`:
+   ```python
+   import logging
+   from flask import Blueprint, jsonify, request
+   from extensions import db
+   from models import Obra
+   
+   bp = Blueprint('<recurso>', __name__)
+   logger = logging.getLogger(__name__)
+   
+   @bp.route('/api/<recurso>', methods=['GET'])
+   def listar():
+       ...
+   ```
+3. Regístralo en `app.py` añadiéndolo a la tupla `BLUEPRINTS`.
 
+## Configuración
+
+`config.py`:
 ```python
-import json
-from app import db, Obra
-
-# Cargar datos
-with open('bne_autores_20240414_103000.json') as f:
-    autores = json.load(f)
-
-# Importar a BD
-for autor in autores:
-    obra = Obra(
-        nombre_autor=autor['nombre'],
-        enlace=autor['enlace'],
-        # ... otros campos
-    )
-    db.session.add(obra)
-
-db.session.commit()
+class Config:
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', '...localhost...')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'dev_secret_key_change_in_production')
 ```
+Variables de entorno en el `.env` de la raíz (no se commitea).
 
----
+## Dependencias
 
-## 📊 Estructura de Datos
+- **producción** (`requirements.txt`): Flask, Flask-CORS, Flask-SQLAlchemy, SQLAlchemy, psycopg2-binary, requests, beautifulsoup4, pandas, numpy, kaggle, …
+- **local mínimo** (`requirements-dev.txt`): sin pandas/numpy/kaggle (no los usa la API; pandas/numpy fallan al compilar en Python 3.13 si pip no encuentra wheels).
 
-### Modelo Obra (app.py)
+## Migraciones
 
-```python
-class Obra(db.Model):
-    id_obra = db.Column(db.BigInteger, primary_key=True)
-    titulo = db.Column(db.String(500), nullable=False)
-    tipo_publicacion = db.Column(db.String(100))
-    nombre_autor = db.Column(db.String(255))
-    anio = db.Column(db.Integer)
-    enlace = db.Column(db.Text, unique=True)
-    # ... más campos
-```
+En [bd/migrations/](../bd/migrations/):
+- `001_initial_schema.sql` — esquema base
+- `002_add_autor_table.sql` — tabla `autor` + FK en `obra` + vista
+- `003_add_imagen_url.sql` — columnas `imagen_url` en `obra` y `autor`
+- `004_paginas_a_500.sql` — amplía `obra.paginas` a `VARCHAR(500)`
 
----
-
-## 🧪 Testing
-
+Se aplican manualmente con `psql`:
 ```bash
-# Ejecutar tests (instalado con pytest)
-pytest
-
-# Con cobertura
-pytest --cov=backend
-
-# Solo tests del scraper
-pytest tests/test_scraper.py
+docker compose exec -T db psql -U bne_user -d bne_db < bd/migrations/00X_xxx.sql
 ```
+En un volumen limpio, `schema_optimized.sql` ya incluye todo.
 
 ---
-
-## 🔧 Configuración
-
-### Variables de Entorno (.env)
-
-```env
-FLASK_ENV=development
-FLASK_APP=app.py
-DATABASE_URL=postgres://bne_user:password@localhost:5432/bne_db
-SECRET_KEY=dev_secret_key
-SQLALCHEMY_TRACK_MODIFICATIONS=False
-```
-
-### Configuración del Scraper (scraper_config.ini)
-
-```ini
-[FUENTE]
-portal = https://datos.bne.es
-
-[OPCIONES_BUSQUEDA]
-limite_resultados = 50
-timeout_segundos = 30
-
-[AUTORES]
-autores = ["García Lorca", "Machado", ...]
-
-[PERIODICOS]
-periodicos = ["ABC", "La Vanguardia", ...]
-```
-
----
-
-## 📈 Desarrollo
-
-### Agregar Nuevo Endpoint
-
-```python
-@app.route('/api/nuevo', methods=['GET'])
-def nuevo_endpoint():
-    """Documentación del endpoint"""
-    try:
-        # Lógica aquí
-        return jsonify({'resultado': 'éxito'}), 200
-    except Exception as e:
-        logger.error(f"Error: {e}")
-        return jsonify({'error': str(e)}), 500
-```
-
-### Agregar Nuevo Modelo
-
-```python
-class NuevoModelo(db.Model):
-    __tablename__ = 'nuevo_modelo'
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(255))
-    
-    def to_dict(self):
-        return {'id': self.id, 'nombre': self.nombre}
-```
-
----
-
-## 🐛 Debugging
-
-### Modo Debug de Flask
-
-```bash
-export FLASK_ENV=development
-python app.py
-
-# O windows:
-set FLASK_ENV=development
-python app.py
-```
-
-### Logs en Consola
-
-```python
-import logging
-
-logger = logging.getLogger(__name__)
-logger.info("Mensaje de información")
-logger.warning("Mensaje de advertencia")
-logger.error("Mensaje de error")
-```
-
-### Inspeccionar Base de Datos
-
-```bash
-# Acceder a PostgreSQL
-psql -U bne_user -d bne_db
-
-# Listar tablas
-\dt
-
-# Ver schema
-\d obra
-
-# Consultas útiles
-SELECT COUNT(*) FROM obra;
-SELECT * FROM obra LIMIT 5;
-```
-
----
-
-## 📦 Dependencias
-
-Ver `requirements.txt` para lista completa:
-
-- **Flask:** Framework web
-- **SQLAlchemy:** ORM para BD
-- **Psycopg2:** Driver PostgreSQL
-- **Requests:** Cliente HTTP (scraper)
-- **Pytest:** Testing
-- **Pandas:** Procesamiento de datos
-
----
-
-## 🚀 Deployment
-
-### Producción con Gunicorn
-
-```bash
-# Instalar Gunicorn
-pip install gunicorn
-
-# Ejecutar con 4 workers
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
-
-# Con archivo de configuración
-gunicorn --config gunicorn_config.py app:app
-```
-
-### Con Docker
-
-```bash
-docker build -t bne-backend -f backend/Dockerfile .
-docker run -p 5000:5000 bne-backend
-```
-
----
-
-## 📞 Ayuda y Recursos
-
-- **Flask Docs:** https://flask.palletsprojects.com/
-- **SQLAlchemy Docs:** https://docs.sqlalchemy.org/
-- **datos.bne.es:** https://datos.bne.es
-- **BNE Datos Enlazados:** https://www.bne.es/es/catalogos/datos-enlazados-bne
-
----
-
-**Versión:** 1.0.0
-**Última actualización:** 14 de abril de 2026
+**Última actualización:** 28 de mayo de 2026

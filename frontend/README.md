@@ -272,11 +272,17 @@ Muestra resultados de importación:
 - Individuales (url/titulo)
 - Lote (estadísticas)
 
-### `ObraDetalleCard` · `ListaObras` · `SectionHeader` · `BarChart` · `EmptyState` · `FieldLabel`
+### `ObraDetalleCard`
+Ficha detallada de una obra. Incluye un botón **"Editar imagen"** que abre un
+input para pegar una URL (p. ej. una portada de la Hemeroteca Digital de la BNE)
+y la guarda con `PUT /api/obras/<id>`, refrescando la previsualización al
+instante. Accesible (`htmlFor`/`id`, `aria-expanded`, errores con `role="alert"`).
+
+### `ListaObras` · `SectionHeader` · `BarChart` · `EmptyState` · `FieldLabel`
 Componentes de presentación reutilizables, cada uno con su bloque BEM en `src/styles/`.
 
 ### `App`
-Componente principal con lógica completa
+Componente principal con lógica completa.
 
 ## 🔍 URLs de Ejemplo
 
@@ -317,4 +323,4 @@ CC0 - Creative Commons Public Domain
 ---
 
 **Estado:** ✅ En desarrollo  
-**Última actualización:** 25 de mayo de 2026
+**Última actualización:** 28 de mayo de 2026

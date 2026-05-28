@@ -49,30 +49,38 @@ El proyecto "Recogida de datos de BNE" es una plataforma moderna basada en micro
 ### 2. Backend (Flask)
 - **Localización:** `/backend`
 - **Puerto:** 5000
-- **Tecnologías:** Python 3.11, Flask, SQLAlchemy, Psycopg2
+- **Tecnologías:** Python 3.11, Flask 3, SQLAlchemy 2, psycopg2
+- **Patrón:** Application Factory + Blueprints, separación SOLID por capas
 - **Responsabilidades:**
   - Exposición de API REST
-  - Lógica de negocio
+  - Lógica de negocio (importación, estadísticas)
   - Integración con scraper de BNE
-  - Autenticación y autorización
   - Validación de datos
 
-#### Módulos Backend:
+#### Estructura modular (Single Responsibility)
 ```
 backend/
-├── app.py                 # Aplicación principal Flask
-├── bne_scraper.py         # Scraper para datos de BNE
-├── models.py              # Modelos SQLAlchemy (futuro)
-├── routes/                # Rutas organizadas por recurso
-│   ├── obras.py
-│   ├── autores.py
-│   ├── periodicos.py
-│   └── proyectos.py
-├── services/              # Lógica de negocio
-├── middleware/            # Middlewares personalizados
-├── utils/                 # Utilidades comunes
-└── config.py              # Configuración
+├── app.py                 Factory: crea la app y registra blueprints
+├── config.py              Configuración (Config)
+├── extensions.py          db = SQLAlchemy()  (sin app → evita ciclos)
+├── bne_scraper.py         Cliente/scraper de datos.bne.es
+├── models/                Capa de datos (un archivo por entidad)
+│   ├── autor.py · usuario.py · obra.py · proyecto.py
+├── services/              Dependencias compartidas
+│   └── scraper.py         Instancia única de BNEScraper (DI)
+└── blueprints/            Capa HTTP, una responsabilidad por blueprint
+    ├── health.py          /health, /api/version, /api/info
+    ├── obras.py           CRUD /api/obras + /api/periodicos/rango-fechas
+    ├── autores.py         CRUD /api/autores
+    ├── importar.py        /api/importar/*
+    ├── estadisticas.py    /api/estadisticas/resumen + /api/buscar
+    └── datasets.py        /api/buscar-datasets/kaggle
 ```
+
+#### Cómo se aplican los principios SOLID
+- **S**ingle Responsibility — cada módulo cubre una sola responsabilidad (config, datos, lógica externa, rutas).
+- **O**pen/Closed — añadir un recurso = crear un blueprint y registrarlo en `app.py`; nada más se toca.
+- **D**ependency Inversion — los blueprints dependen de abstracciones (`extensions.db`, `services.scraper`), no de implementaciones concretas.
 
 ### 3. Base de Datos (PostgreSQL)
 

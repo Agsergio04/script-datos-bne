@@ -5,22 +5,32 @@ Plataforma integrada para recopilar, gestionar y analizar datos de autores y per
 ## 🏗️ Estructura del Proyecto
 
 ```
-Recogida de datos de BNE/
-├── backend/                    # API y servicios Python/Flask
-│   ├── Dockerfile             # Configuración Docker
-│   ├── requirements.txt        # Dependencias Python
-│   ├── bne_scraper.py         # Script principal de scraping
-│   └── app.py                 # Aplicación Flask (por crear)
-├── frontend/                   # Interfaz de usuario (por crear)
-├── bd/                         # Base de datos PostgreSQL
-│   ├── DataPrensa.sql         # Schema original
-│   ├── schema_optimized.sql   # Schema mejorado con índices
-│   ├── migrations/            # Scripts de migración
-│   └── seeders/               # Datos de ejemplo
-├── docs/                       # Documentación del proyecto
-├── docker-compose.yml         # Orquestación de contenedores
-├── .env.example               # Variables de entorno
-└── README.md                  # Este archivo
+script-datos-bne/
+├── backend/                    # API Flask (estructura modular SOLID)
+│   ├── app.py                  # Application Factory
+│   ├── config.py               # Configuración (Config)
+│   ├── extensions.py           # db = SQLAlchemy()
+│   ├── bne_scraper.py          # Cliente/scraper de datos.bne.es
+│   ├── models/                 # Capa de datos (un archivo por entidad)
+│   ├── services/scraper.py     # Instancia compartida del scraper
+│   ├── blueprints/             # Rutas HTTP por recurso (Single Responsibility)
+│   │   ├── health.py · obras.py · autores.py
+│   │   ├── importar.py · estadisticas.py · datasets.py
+│   ├── requirements.txt        # Dependencias completas
+│   ├── requirements-dev.txt    # Mínimas para correr la API en local
+│   └── Dockerfile
+├── frontend/                   # React 18 + CSS BEM (sin Tailwind, paleta 2-color AA/AAA)
+│   ├── src/styles/             # variables · base · layout · components · pages
+│   ├── src/components/         # Reutilizables (ObraDetalleCard, ImagenPreview, …)
+│   └── src/pages/              # AutoresPage, PeriodicosPage
+├── bd/
+│   ├── schema_optimized.sql    # Esquema completo (incluye autor + imagen_url)
+│   ├── migrations/             # 002 autor · 003 imagen_url · 004 paginas→500
+│   └── seeders/seed_data.sql   # Deshabilitado (la BD arranca vacía)
+├── docs/                       # ARQUITECTURA, API, SCRAPER
+├── docker-compose.yml
+├── .env.example                # (.env real está gitignoreado)
+└── README.md
 ```
 
 ## 🚀 Inicio Rápido
