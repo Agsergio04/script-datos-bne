@@ -15,7 +15,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # Postgres 18+ guarda los datos en una subcarpeta por versión
+      # dentro de /var/lib/postgresql (no en /var/lib/postgresql/data como antes).
+      - postgres_data:/var/lib/postgresql
       - ./bd/schema_optimized.sql:/docker-entrypoint-initdb.d/01-schema.sql
       - ./bd/seeders/seed_data.sql:/docker-entrypoint-initdb.d/02-seed.sql
     networks:

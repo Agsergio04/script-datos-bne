@@ -69,6 +69,16 @@ Esto iniciará:
 - 🎨 **Frontend** en `http://localhost:3000`
 - 🛠️ **pgAdmin** en `http://localhost:5050`
 
+> **¿Despliegue en un servidor real?** Si quieres montar el proyecto en una
+> VM con un Apache que ya sirve otra aplicación (Dédalo, WordPress, etc.) y
+> exponerlo bajo `tu-dominio/bne/` sin tocar el resto, sigue la guía
+> [`docs/DEPLOY_VM.md`](docs/DEPLOY_VM.md). Incluye: instalación de Docker,
+> ajuste de puertos para evitar conflictos con un Postgres nativo,
+> configuración del proxy inverso de Apache, soluciones a los baches
+> conocidos (Postgres 18 / `REACT_APP_API_URL` con `/api` doblado /
+> HTTPS terminado externamente) y mantenimiento (backups, actualización,
+> logs).
+
 4. **Verificar que todo funciona**
 
 ```bash
